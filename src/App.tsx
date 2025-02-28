@@ -1,7 +1,8 @@
+import Land from './Pages/Landing'
 function App() {
   return (
     <>
-      CollabNest
+      <Land/>
     </>
   )
 }
