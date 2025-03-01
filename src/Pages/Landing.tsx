@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const MentorPlatform: React.FC = () => {
   const [activeSlide, setActiveSlide] = useState(0);
-  
+  const navigate = useNavigate();
+
   const roles = [
     {
       title: "Student",
@@ -25,6 +27,10 @@ const MentorPlatform: React.FC = () => {
     setActiveSlide(index);
   };
 
+  const handleGetStarted = () => {
+    navigate('/login');
+  };
+
   return (
     <div className="font-sans">
       {/* Hero Section */}
@@ -44,7 +50,10 @@ const MentorPlatform: React.FC = () => {
             experience.
           </p>
           <div>
-            <button className="border-2 border-white px-6 py-2 text-lg font-medium hover:bg-white hover:text-black transition duration-300">
+            <button 
+              onClick={handleGetStarted} 
+              className="border-2 border-white px-6 py-2 text-lg font-medium hover:bg-white hover:text-black transition duration-300"
+            >
               Get Started
             </button>
           </div>
@@ -171,7 +180,10 @@ const MentorPlatform: React.FC = () => {
             to guide students through real-world projects across various domains, from 
             technology to research and innovation.
           </p>
-          <button className="bg-black text-white px-8 py-3 text-lg font-medium hover:bg-gray-800 transition duration-300">
+          <button 
+            onClick={handleGetStarted} 
+            className="bg-black text-white px-8 py-3 text-lg font-medium hover:bg-gray-800 transition duration-300"
+          >
             Sign Up Now
           </button>
         </div>
