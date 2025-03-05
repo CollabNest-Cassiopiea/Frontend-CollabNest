@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-const Loginpage: React.FC = () => {
+const SignupPage: React.FC = () => {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -207,4 +207,4 @@ const Loginpage: React.FC = () => {
   );
 };
 
-export default Loginpage;
+export default SignupPage;
