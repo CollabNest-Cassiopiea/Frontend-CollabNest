@@ -50,7 +50,7 @@ const MentorPlatform: React.FC = () => {
   ];
 
   const handleGetStarted = () => {
-    navigate('/studentdash');
+    navigate('/login');
   };
 
   // Custom colors - using Avocado's dark theme with green accents
