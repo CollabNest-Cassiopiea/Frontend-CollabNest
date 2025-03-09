@@ -9,7 +9,7 @@ import Profile from "../Pages/mentor_dashboard/profile"; // Profile Page
 import StudentProfile from "../Pages/Student_Dashboard/profile"; // Student Profile Page
 import Certificates from "../Pages/Student_Dashboard/certificates"; // Certificates Page
 import StudentProjects from "../Pages/Student_Dashboard/myproject"; // Student Projects Page
-
+import Contact from "@/Pages/Contact";
 const AppRouter: React.FC = () => {
   return (
     <Router>
@@ -17,12 +17,14 @@ const AppRouter: React.FC = () => {
         <Route path="/" element={<MentorPlatform />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/student/home" element={<StudentHome />} />
-        <Route path="/home" element={<Home />} />
-        <Route path="/projects" element={<Project />} />
-        <Route path="/profile" element={<Profile/>} />
-        <Route path="/student_profile" element={<StudentProfile/>} />
+        <Route path="/mentor/home" element={<Home />} />
+        <Route path="/mentor/projects" element={<Project />} />
+        <Route path="/mentor/profile" element={<Profile/>} />
+        <Route path="/student/profile" element={<StudentProfile/>} />
         <Route path="/certificates" element={<Certificates/>} />
         <Route path="/student/projects" element={<StudentProjects/>} />
+        <Route path="/contact_us" element={<Contact/>} />
+
       </Routes>
     </Router>
   );

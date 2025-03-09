@@ -140,11 +140,7 @@ const StudentHome: React.FC = () => {
       case "home":
         return (
           <div className="w-full max-w-6xl mx-auto bg-[#141414] p-6 rounded-xl">
-            {/* Welcome header with notification icon */}
-            <div className="flex justify-between items-center mb-6">
-              <h1 className="text-2xl font-bold">Welcome back, Jayden!</h1>
-              <NotificationIcon />
-            </div>
+            
 
             {/* Continue Project Section */}
             <div className="mb-8">
@@ -211,10 +207,6 @@ const StudentHome: React.FC = () => {
         return (
           <div className="w-full max-w-6xl mx-auto bg-[#141414] p-6 rounded-xl">
             {/* Header with notification icon */}
-            <div className="flex justify-between items-center mb-6">
-              <h1 className="text-2xl font-bold">My Projects</h1>
-              <NotificationIcon />
-            </div>
             <StudentProjects />
           </div>
         );
@@ -222,10 +214,7 @@ const StudentHome: React.FC = () => {
         return (
           <div className="w-full max-w-6xl mx-auto bg-[#141414] p-6 rounded-xl">
             {/* Header with notification icon */}
-            <div className="flex justify-between items-center mb-6">
-              <h1 className="text-2xl font-bold">Certificates</h1>
-              <NotificationIcon />
-            </div>
+            
             <MyCertificates />
           </div>
         );
@@ -233,10 +222,7 @@ const StudentHome: React.FC = () => {
         return (
           <div className="w-full max-w-6xl mx-auto bg-[#141414] p-6 rounded-xl">
             {/* Header with notification icon */}
-            <div className="flex justify-between items-center mb-6">
-              <h1 className="text-2xl font-bold">Profile</h1>
-              <NotificationIcon />
-            </div>
+            
             <MyProfile />
           </div>
         );
