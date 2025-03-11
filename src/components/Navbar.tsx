@@ -33,18 +33,18 @@ const Navbar = () => {
 
           {/* Auth Buttons (Desktop) - Right aligned and properly spaced */}
           <div className="hidden md:flex items-center space-x-4">
-          <Link 
-  to="/login" 
-  className="border-2 border-white px-4 py-2 text-white font-bold rounded-lg hover:bg-white hover:text-black transition-colors"
->
-  Log In
-</Link>
-<Link 
-  to="/contact_us" 
-  className="border-2 border-white px-4 py-2 text-white font-bold rounded-lg hover:bg-white hover:text-black transition-colors"
->
-  Contact US
-</Link>
+            <Link
+              to="/login"
+              className="border-2 border-white px-4 py-2 text-white font-bold rounded-lg hover:bg-white hover:text-black transition-colors"
+            >
+              Log In
+            </Link>
+            <Link
+              to="/contact_us"
+              className="border-2 border-white px-4 py-2 text-white font-bold rounded-lg hover:bg-white hover:text-black transition-colors"
+            >
+              Contact US
+            </Link>
 
 
 

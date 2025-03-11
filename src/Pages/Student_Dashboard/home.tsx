@@ -222,7 +222,6 @@ const StudentHome: React.FC = () => {
         return (
           <div className="w-full max-w-6xl mx-auto bg-[#141414] p-6 rounded-xl">
             {/* Header with notification icon */}
-            
             <MyProfile />
           </div>
         );

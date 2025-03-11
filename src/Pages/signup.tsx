@@ -1,6 +1,8 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const Loginpage: React.FC = () => {
+  const navigate=useNavigate();
   const [formData, setFormData] = useState({
     acceptTerms: false,
   });
@@ -50,7 +52,7 @@ const Loginpage: React.FC = () => {
                 <div className="flex justify-center">
                   <button
                     type="button"
-                    className="bg-green-950 text-white py-3 rounded-full text-sm hover:bg-green-900 transition duration-300 w-full max-w-xs flex items-center justify-center cursor-pointer transform hover:scale-105 active:scale-95"
+                    className="bg-green-950 text-white py-3 rounded-full text-sm hover:bg-green-900 transition duration-300 w-full max-w-xs flex items-center justify-center cursor-pointer transform hover:scale-105 active:scale-95" onClick={()=>navigate("/register")}
                   >
                     <svg
                       className="h-4 w-4 mr-2"
@@ -86,7 +88,7 @@ const Loginpage: React.FC = () => {
                     required
                   />
                   <label htmlFor="acceptTerms" className="text-gray-400 text-sm cursor-pointer">
-                    I Accept terms and conditions & 
+                    I Accept terms and conditions &
                     <span className="text-green-400"> privacy policy</span>
                   </label>
                 </div>
