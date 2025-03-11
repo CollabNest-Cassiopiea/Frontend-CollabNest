@@ -13,3 +13,46 @@ export interface FeatureCardProps {
   }
   
   // If needed, you can add more interfaces for the component props
+
+  // types.ts
+export interface Project {
+  id: string;
+  title: string;
+  description: string;
+  imageUrl: string;
+}
+
+export interface Meeting {
+  id: string;
+  title: string;
+  date: string;
+  time: string;
+  link?: string;
+}
+
+export interface Certificate {
+  id: string;
+  title: string;
+  issueDate: string;
+  projectId?: string;
+  imageUrl?: string;
+}
+
+export interface ProfileData {
+  id: string;
+  name: string;
+  email: string;
+  avatar?: string;
+  bio?: string;
+  skills?: string[];
+  education?: {
+    institution: string;
+    degree: string;
+    year: string;
+  }[];
+  social?: {
+    linkedin?: string;
+    github?: string;
+    twitter?: string;
+  };
+}
