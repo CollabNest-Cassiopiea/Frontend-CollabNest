@@ -29,5 +29,5 @@
     "noFallthroughCasesInSwitch": true,
     "noUncheckedSideEffectImports": true
   },
-  "include": ["src", "src/Pages/signup.tsx"]
+  "include": ["src", "src/Pages/signup.tsx", "src/components/mentor/.tsx"]
 }

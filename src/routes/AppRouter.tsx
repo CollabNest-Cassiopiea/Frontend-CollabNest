@@ -1,33 +1,28 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import MentorPlatform from "../Pages/Landing"; // Landing Page
-import LoginPage from "../Pages/signup"; // Login Page
-import StudentHome from "../Pages/Student_Dashboard/home"; // Student Dashboard Page
-import Home from "../Pages/mentor_dashboard/home"; // Home Page
-import Project from "../Pages/mentor_dashboard/projects"; // Projects Page
-import Profile from "../Pages/mentor_dashboard/profile"; // Profile Page
-import StudentProfile from "../Pages/Student_Dashboard/profile"; // Student Profile Page
-import Certificates from "../Pages/Student_Dashboard/certificates"; // Certificates Page
-import StudentProjects from "../Pages/Student_Dashboard/myproject"; // Student Projects Page
-import Contact from "@/Pages/Contact";
-const AppRouter: React.FC = () => {
-  return (
-    <Router>
-      <Routes>
-        <Route path="/" element={<MentorPlatform />} />
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/student/home" element={<StudentHome />} />
-        <Route path="/mentor/home" element={<Home />} />
-        <Route path="/mentor/projects" element={<Project />} />
-        <Route path="/mentor/profile" element={<Profile/>} />
-        <Route path="/student/profile" element={<StudentProfile/>} />
-        <Route path="/certificates" element={<Certificates/>} />
-        <Route path="/student/projects" element={<StudentProjects/>} />
-        <Route path="/contact_us" element={<Contact/>} />
+import MentorPlatform from "../pages/landing";
+import SignUp from "../pages/login";
+/*student*/
+import StudentDashboard from "@/pages/student-dashboard/home";
+import CertificatesPage from "@/pages/student-dashboard/certificates";
+import StudentProjects from "@/pages/student-dashboard/projects";
+import StudentProfile from "@/pages/student-dashboard/profile";
+import StudentNotifications from "@/pages/student-dashboard/notifications";
 
-      </Routes>
-    </Router>
-  );
+const AppRouter: React.FC = () => {
+    return (
+        <Router>
+            <Routes>
+                <Route path="/" element={<MentorPlatform />} />
+                <Route path="/login" element={<SignUp />} />
+                <Route path="/student/home" element={<StudentDashboard />} />
+                <Route path="/student/certificates" element={<CertificatesPage />} />
+                <Route path="/student/projects" element={<StudentProjects />} />
+                <Route path="/student/profile" element={<StudentProfile />} />
+                <Route path="/student/notifications" element={<StudentNotifications />} />
+            </Routes>
+        </Router>
+    );
 };
 
 export default AppRouter;
