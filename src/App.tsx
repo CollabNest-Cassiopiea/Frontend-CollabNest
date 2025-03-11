@@ -1,4 +1,4 @@
-import Land from './Pages/Landing'
+import Land from './pages/landing'
 function App() {
   return (
     <>
