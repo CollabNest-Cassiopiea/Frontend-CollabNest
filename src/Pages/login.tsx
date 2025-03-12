@@ -1,6 +1,9 @@
+import { cn } from "@/lib/utils";
+import { useAuthStore } from "@/store/authStore";
 import React, { useState } from "react";
 
 const Loginpage: React.FC = () => {
+  const {isAuthLoading, signin, } = useAuthStore()
   const [formData, setFormData] = useState({
     acceptTerms: false,
   });
@@ -16,6 +19,14 @@ const Loginpage: React.FC = () => {
     e.preventDefault();
     console.log("Form submitted:", formData);
   };
+
+  const handleSignInWithMicrosoft = async () => {
+    if(!formData.acceptTerms){
+      alert('Accept terms and conditions');
+      return
+    }
+    if(!isAuthLoading) await signin()
+  }
 
   return (
     <div className="flex flex-col h-screen w-full bg-black overflow-y-auto relative">
@@ -50,19 +61,28 @@ const Loginpage: React.FC = () => {
                 <div className="flex justify-center">
                   <button
                     type="button"
-                    className="bg-green-950 text-white py-3 rounded-full text-sm hover:bg-green-900 transition duration-300 w-full max-w-xs flex items-center justify-center cursor-pointer transform hover:scale-105 active:scale-95"
+                    className={cn(
+                      "bg-green-950 text-white py-3 rounded-full text-sm transition duration-300 w-full max-w-xs flex items-center justify-center cursor-pointer transform",
+                      isAuthLoading?"":"hover:bg-green-900 hover:scale-105 active:scale-95"
+                    )}
+                    onClick={handleSignInWithMicrosoft}
+                    disabled={isAuthLoading}
                   >
-                    <svg
-                      className="h-4 w-4 mr-2"
-                      fill="currentColor"
-                      viewBox="0 0 23 23"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path d="M0 0h11v11H0z" fill="#f25022" />
-                      <path d="M12 0h11v11H12z" fill="#7fba00" />
-                      <path d="M0 12h11v11H0z" fill="#00a4ef" />
-                      <path d="M12 12h11v11H12z" fill="#ffb900" />
-                    </svg>
+                    {isAuthLoading ? (
+                      <div className="spinner-border animate-spin h-5 w-5 mr-2 border-t-2 border-white rounded-full"></div>
+                    ) : (
+                      <svg
+                        className="h-4 w-4 mr-2"
+                        fill="currentColor"
+                        viewBox="0 0 23 23"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path d="M0 0h11v11H0z" fill="#f25022" />
+                        <path d="M12 0h11v11H12z" fill="#7fba00" />
+                        <path d="M0 12h11v11H0z" fill="#00a4ef" />
+                        <path d="M12 12h11v11H12z" fill="#ffb900" />
+                      </svg>
+                    )}
                     Sign in with Microsoft
                   </button>
                 </div>

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import MentorPlatform from "../pages/Landing";
 import SignUp from "../pages/login";
@@ -13,24 +13,75 @@ import MentorProjectsPage from "@/pages/mentor-dashboard/projects";
 import MentorProfilePage from "@/pages/mentor-dashboard/profile";
 import MentorNotificationsPage from "@/pages/mentor-dashboard/notifications";
 import MentorApprovalsPage from "@/pages/mentor-dashboard/approvals";
-
+import { useAuthStore } from "@/store/authStore";
+import { ProtectedRoutes, RedirectAuthenticatedUser } from "./authRouter";
+import { LogOut } from "lucide-react";
 
 const AppRouter: React.FC = () => {
+    const {isCheckingAuth, checkAuth} = useAuthStore();
+    useEffect(() => {
+        if (isCheckingAuth) checkAuth();
+    }, []);
     return (
         <Router>
             <Routes>
                 <Route path="/" element={<MentorPlatform />} />
-                <Route path="/login" element={<SignUp />} />
-                <Route path="/student" element={<StudentDashboard />} />
-                <Route path="/student/certificates" element={<CertificatesPage />} />
-                <Route path="/student/projects" element={<StudentProjects />} />
-                <Route path="/student/profile" element={<StudentProfile />} />
-                <Route path="/student/notifications" element={<StudentNotifications />} />
-                <Route path="/mentor" element={<MentorDashboardPage />} />
-                <Route path="/mentor/projects" element={<MentorProjectsPage />} />
-                <Route path="/mentor/profile" element={<MentorProfilePage />} />
-                <Route path="/mentor/notifications" element={<MentorNotificationsPage />} />
-                <Route path="/mentor/approvals" element={<MentorApprovalsPage />} />
+                <Route path="/login" element={
+                    <RedirectAuthenticatedUser>
+                        <SignUp />
+                    </RedirectAuthenticatedUser>
+                } />
+                <Route path="/logout" element={<LogOut /> } />
+                <Route path="/student" element={
+                    <ProtectedRoutes student mentor admin>
+                        <StudentDashboard />
+                    </ProtectedRoutes>
+                } />
+                <Route path="/student/certificates" element={
+                    <ProtectedRoutes student mentor admin>
+                        <CertificatesPage />
+                    </ProtectedRoutes>
+                } />
+                <Route path="/student/projects" element={
+                    <ProtectedRoutes student mentor admin>
+                        <StudentProjects />
+                    </ProtectedRoutes>
+                } />
+                <Route path="/student/profile" element={
+                    <ProtectedRoutes student mentor admin>
+                        <StudentProfile />
+                    </ProtectedRoutes>
+                } />
+                <Route path="/student/notifications" element={
+                    <ProtectedRoutes student mentor admin>
+                        <StudentNotifications />
+                    </ProtectedRoutes>
+                } />
+                <Route path="/mentor" element={
+                    <ProtectedRoutes professor mentor admin>
+                        <MentorDashboardPage />
+                    </ProtectedRoutes>
+                } />
+                <Route path="/mentor/projects" element={
+                    <ProtectedRoutes professor mentor admin>
+                        <MentorProjectsPage />
+                    </ProtectedRoutes>
+                } />
+                <Route path="/mentor/profile" element={
+                    <ProtectedRoutes professor mentor admin>
+                        <MentorProfilePage />
+                    </ProtectedRoutes>
+                } />
+                <Route path="/mentor/notifications" element={
+                    <ProtectedRoutes professor mentor admin>
+                        <MentorNotificationsPage />
+                    </ProtectedRoutes>
+                } />
+                <Route path="/mentor/approvals" element={
+                    <ProtectedRoutes professor mentor admin>
+                        <MentorApprovalsPage />
+                    </ProtectedRoutes>
+                } />
             </Routes>
         </Router>
     );
