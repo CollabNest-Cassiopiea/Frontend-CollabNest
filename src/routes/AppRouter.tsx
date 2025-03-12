@@ -13,6 +13,7 @@ import MentorProjectsPage from "@/pages/mentor-dashboard/projects";
 import MentorProfilePage from "@/pages/mentor-dashboard/profile";
 import MentorNotificationsPage from "@/pages/mentor-dashboard/notifications";
 import MentorApprovalsPage from "@/pages/mentor-dashboard/approvals";
+import RoleSelectionPage from "@/pages/role";
 
 
 const AppRouter: React.FC = () => {
@@ -21,6 +22,7 @@ const AppRouter: React.FC = () => {
             <Routes>
                 <Route path="/" element={<MentorPlatform />} />
                 <Route path="/login" element={<SignUp />} />
+                <Route path="/role" element={<RoleSelectionPage />} />
                 <Route path="/student" element={<StudentDashboard />} />
                 <Route path="/student/certificates" element={<CertificatesPage />} />
                 <Route path="/student/projects" element={<StudentProjects />} />
