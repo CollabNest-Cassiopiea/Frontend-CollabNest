@@ -1,14 +1,14 @@
 import { useState } from "react"
 import type React from "react"
-import { StudentSidebar } from "./student-sidebar"
+import { MentorSidebar } from "./mentor-sidebar"
 import { PanelLeft } from "lucide-react"
 import { Button } from "@/components/ui/button"
 
-interface DashboardLayoutProps {
+interface MentorLayoutProps {
   children: React.ReactNode
 }
 
-export function DashboardLayout({ children }: DashboardLayoutProps) {
+export function MentorLayout({ children }: MentorLayoutProps) {
   const [showMobileSidebar, setShowMobileSidebar] = useState(false)
   
   return (
@@ -25,7 +25,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
       <div className={`fixed z-50 inset-y-0 left-0 transform md:relative md:translate-x-0 md:w-64 transition duration-200 ease-in-out ${
         showMobileSidebar ? "translate-x-0" : "-translate-x-full"
       } md:block`}>
-        <StudentSidebar onClose={() => setShowMobileSidebar(false)} />
+        <MentorSidebar onClose={() => setShowMobileSidebar(false)} />
       </div>
       
       {/* Main content */}

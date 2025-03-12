@@ -1,18 +1,18 @@
 "use client"
 
 import { Link, useLocation } from "react-router-dom"
-import { BookOpen, BadgeIcon as Certificate, Home, LogOut, User, Bell, Folder, X } from "lucide-react"
+import { BookOpen, BadgeIcon as Home, LogOut, User, Bell, Folder, X, CheckSquare } from "lucide-react"
 
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar"
-import { ModeToggle } from "./mode-toggle"
+import { ModeToggle } from "../student/mode-toggle"
 
-interface StudentSidebarProps {
+interface MentorSidebarProps {
   onClose?: () => void
 }
 
-export function StudentSidebar({ onClose }: StudentSidebarProps) {
+export function MentorSidebar({ onClose }: MentorSidebarProps) {
   const location = useLocation()
   const pathname = location.pathname
 
@@ -20,39 +20,39 @@ export function StudentSidebar({ onClose }: StudentSidebarProps) {
     {
       label: "Home",
       icon: Home,
-      href: "/student",
-      active: pathname === "/student",
+      href: "/mentor",
+      active: pathname === "/mentor",
     },
     {
       label: "My Projects",
       icon: Folder,
-      href: "/student/projects",
-      active: pathname === "/student/projects",
+      href: "/mentor/projects",
+      active: pathname === "/mentor/projects",
     },
     {
-      label: "Certificates",
-      icon: Certificate,
-      href: "/student/certificates",
-      active: pathname === "/student/certificates",
-    },
-    {
-      label: "Profile",
-      icon: User,
-      href: "/student/profile",
-      active: pathname === "/student/profile",
+      label: "Mentor Approvals",
+      icon: CheckSquare,
+      href: "/mentor/approvals",
+      active: pathname === "/mentor/approvals",
     },
     {
       label: "Notifications",
       icon: Bell,
-      href: "/student/notifications",
-      active: pathname === "/student/notifications",
+      href: "/mentor/notifications",
+      active: pathname === "/mentor/notifications",
+    },
+    {
+      label: "Profile",
+      icon: User,
+      href: "/mentor/profile",
+      active: pathname === "/mentor/profile",
     },
   ]
 
   return (
     <div className="flex h-full flex-col border-r bg-background">
       <div className="flex h-14 items-center border-b px-4">
-        <Link to="/student" className="flex items-center gap-2 font-semibold">
+        <Link to="/mentor" className="flex items-center gap-2 font-semibold">
           <BookOpen className="h-6 w-6" />
           <span>CollabNest</span>
         </Link>
