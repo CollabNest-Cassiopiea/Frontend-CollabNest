@@ -19,29 +19,26 @@ export const RedirectAuthenticatedUser = ({ children, href}: {children: ReactNod
 };
 
 export const ProtectedRoutes = ({ children, href, student, mentor, professor, admin }: {children: ReactNode, href?: string, student?: boolean, mentor?: boolean, professor?: boolean, admin?: boolean }) => {
-    // selectd roles can only view this page
     let navigate = useNavigate();
     const {isAuthenticated, user} = useAuthStore();
-    console.log(user);
-    if (user) {
-        console.log((mentor && user.role === "MENTOR")||
-        (student && user.role === "STUDENT")||
-        (professor && user.role === "PROFESSOR")||
-        (admin && user.role === "ADMIN"));  
-    }
-    console.log(user);
+
+    // Check if the environment is development
+    const isDevEnvironment = process.env.NODE_ENV === 'development';
+
     useEffect(() => {
-        if (!isAuthenticated || !user) {
-            navigate('/login');
-        } else if (
-            !((mentor && user.role === "MENTOR")||
-            (student && user.role === "STUDENT")||
-            (professor && user.role === "PROFESSOR")||
-            (admin && user.role === "ADMIN"))
-        ) {
-            navigate('/');
-        } 
-    }, [isAuthenticated, user, navigate, mentor, student, href, professor, admin])
+        if (!isDevEnvironment) {
+            if (!isAuthenticated || !user) {
+                navigate('/login');
+            } else if (
+                !((mentor && user.role === "MENTOR")||
+                (student && user.role === "STUDENT")||
+                (professor && user.role === "PROFESSOR")||
+                (admin && user.role === "ADMIN"))
+            ) {
+                navigate('/');
+            }
+        }
+    }, [isAuthenticated, user, navigate, mentor, student, href, professor, admin, isDevEnvironment])
     
     return children;
 };

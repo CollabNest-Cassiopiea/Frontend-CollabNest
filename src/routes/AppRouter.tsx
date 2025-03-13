@@ -8,6 +8,8 @@ import CertificatesPage from "@/pages/student-dashboard/certificates";
 import StudentProjects from "@/pages/student-dashboard/projects";
 import StudentProfile from "@/pages/student-dashboard/profile";
 import StudentNotifications from "@/pages/student-dashboard/notifications";
+import { ProjectDetailsPage } from "@/pages/student-dashboard/project-details";
+// Mentor
 import MentorDashboardPage from "@/pages/mentor-dashboard/home";
 import MentorProjectsPage from "@/pages/mentor-dashboard/projects";
 import MentorProfilePage from "@/pages/mentor-dashboard/profile";
@@ -47,6 +49,11 @@ const AppRouter: React.FC = () => {
                 <Route path="/student/projects" element={
                     <ProtectedRoutes student mentor admin>
                         <StudentProjects />
+                    </ProtectedRoutes>
+                } />
+                <Route path="/student/projects/:projectId" element={
+                    <ProtectedRoutes student mentor admin>
+                        <ProjectDetailsPage />
                     </ProtectedRoutes>
                 } />
                 <Route path="/student/profile" element={

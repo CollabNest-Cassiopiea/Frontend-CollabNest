@@ -1,64 +1,15 @@
-import { DashboardLayout } from "../../components/student/dashboard-layout"
-import { ProjectCard } from "../../components/student/project-card"
-import { MeetingCard } from "../../components/student/meeting-card"
+"use client"
+
+import { useState } from "react"
+import { DashboardLayout } from "@/components/student/dashboard-layout"
+import { ProjectCard } from "@/components/student/project-card"
+import { MeetingCard } from "@/components/student/meeting-card"
 import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../../components/ui/card"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { ProjectDetailModal } from "@/components/student/project-detail-modal"
+import type { Project } from "../../types/project"
 
 // Sample data - in a real app, this would come from an API
-const ongoingProjects = [
-  {
-    id: 1,
-    title: "Web Development Portfolio",
-    description:
-      "Create a professional portfolio website showcasing your projects and skills using React and Tailwind CSS.",
-    mentor: { name: "Dr. Sarah Johnson" },
-    progress: 65,
-    tags: ["Frontend"],
-  },
-  {
-    id: 2,
-    title: "Machine Learning Image Classifier",
-    description: "Build an image classification model using TensorFlow to identify objects in photographs.",
-    mentor: { name: "Prof. Michael Chen" },
-    progress: 30,
-    tags: ["AI/ML"],
-  },
-  {
-    id: 3,
-    title: "Mobile App Development",
-    description: "Develop a cross-platform mobile application using React Native for task management.",
-    mentor: { name: "Alex Rodriguez" },
-    progress: 45,
-    tags: ["Mobile"],
-  },
-]
-
-const recommendedProjects = [
-  {
-    id: 4,
-    title: "Blockchain Smart Contract",
-    description: "Create and deploy a smart contract on Ethereum for a decentralized application.",
-    mentor: { name: "Dr. James Wilson" },
-    progress: 0,
-    tags: ["Blockchain", "Advanced"],
-  },
-  {
-    id: 5,
-    title: "Data Visualization Dashboard",
-    description: "Build an interactive dashboard to visualize complex datasets using D3.js and React.",
-    mentor: { name: "Lisa Thompson" },
-    progress: 0,
-    tags: ["Data", "Beginner"],
-  },
-  {
-    id: 6,
-    title: "Cloud-based Microservices",
-    description: "Design and implement a microservices architecture using Docker and Kubernetes.",
-    mentor: { name: "Robert Garcia" },
-    progress: 0,
-    tags: ["Backend", "Advanced"],
-  },
-]
 
 const scheduledMeetings = [
   {
@@ -78,6 +29,117 @@ const scheduledMeetings = [
 ]
 
 export default function StudentDashboard() {
+  const [ongoingProjects, setOngoingProjects] = useState<Project[]>([
+    {
+      id: 1,
+      title: "Web Development Portfolio",
+      description: "Create a professional portfolio website showcasing your projects and skills using React and Tailwind CSS.",
+      mentor: { name: "Dr. Sarah Johnson" },
+      progress: 65,
+      tags: ["Frontend"],
+      techStack: [],
+      status: "ongoing",
+      leaderboard: [],
+      discussion: [],
+      tasks: []
+    },
+    {
+      id: 2,
+      title: "Machine Learning Image Classifier",
+      description: "Build an image classification model using TensorFlow to identify objects in photographs.",
+      mentor: { name: "Prof. Michael Chen" },
+      progress: 30,
+      tags: ["AI/ML"],
+      techStack: [],
+      status: "ongoing",
+      leaderboard: [],
+      discussion: [],
+      tasks: []
+    },
+    {
+      id: 3,
+      title: "Mobile App Development",
+      description: "Develop a cross-platform mobile application using React Native for task management.",
+      mentor: { name: "Alex Rodriguez" },
+      progress: 45,
+      tags: ["Mobile"],
+      techStack: [],
+      status: "ongoing",
+      leaderboard: [],
+      discussion: [],
+      tasks: []
+    },
+  ])
+
+  const [recommendedProjects, setRecommendedProjects] = useState<Project[]>([
+    {
+      id: 4,
+      title: "Blockchain Smart Contract",
+      description: "Create and deploy a smart contract on Ethereum for a decentralized application.",
+      mentor: { name: "Dr. James Wilson" },
+      progress: 0,
+      tags: ["Blockchain", "Advanced"],
+      techStack: ["Solidity", "Ethereum", "Web3.js"],
+      status: "available",
+      leaderboard: [],
+      discussion: [],
+      tasks: []
+    },
+    {
+      id: 5,
+      title: "Data Visualization Dashboard",
+      description: "Build an interactive dashboard to visualize complex datasets using D3.js and React.",
+      mentor: { name: "Lisa Thompson" },
+      progress: 0,
+      tags: ["Data", "Beginner"],
+      techStack: ["D3.js", "React", "JavaScript"],
+      status: "available",
+      leaderboard: [],
+      discussion: [],
+      tasks: []
+    },
+    {
+      id: 6,
+      title: "Cloud-based Microservices",
+      description: "Design and implement a microservices architecture using Docker and Kubernetes.",
+      mentor: { name: "Robert Garcia" },
+      progress: 0,
+      tags: ["Backend", "Advanced"],
+      techStack: ["Docker", "Kubernetes", "Node.js"],
+      status: "available",
+      leaderboard: [],
+      discussion: [],
+      tasks: []
+    },
+  ])
+
+  const [isModalOpen, setIsModalOpen] = useState(false)
+  const [selectedProject, setSelectedProject] = useState<Project | null>(null)
+
+  const handleJoinProject = (project: Project) => {
+    // Add mock status and required fields
+    const mockJoinedProject: Project = {
+      ...project,
+      status: "ongoing",
+      progress: 0,
+      leaderboard: [],
+      discussion: []
+    };
+  
+    setOngoingProjects(prev => [...prev, mockJoinedProject]);
+    setRecommendedProjects(prev => prev.filter(p => p.id !== project.id));
+  };
+
+  const handleProjectClick = (project: Project) => {
+    setSelectedProject(project)
+    setIsModalOpen(true)
+  }
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false)
+    setSelectedProject(null)
+  }
+
   return (
     <DashboardLayout>
       <div className="container mx-auto p-4 md:p-6">
@@ -155,6 +217,7 @@ export default function StudentDashboard() {
                     mentor={project.mentor}
                     progress={project.progress}
                     tags={project.tags}
+                    onClick={() => handleProjectClick(project)}
                   />
                 ))}
               </div>
@@ -162,6 +225,15 @@ export default function StudentDashboard() {
           </Card>
         </div>
       </div>
+
+      {selectedProject && (
+        <ProjectDetailModal
+          isOpen={isModalOpen}
+          onClose={handleCloseModal}
+          project={selectedProject}
+          onJoin={handleJoinProject}
+        />
+      )}
     </DashboardLayout>
   )
 }
