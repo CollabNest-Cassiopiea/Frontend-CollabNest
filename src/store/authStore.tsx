@@ -21,6 +21,7 @@ api.interceptors.response.use(
       localStorage.setItem("auth", "false"); // Set auth to false
       localStorage.removeItem("user");
       localStorage.removeItem("authorization");
+      firebaseAuth.signOut();
     }
     return Promise.reject(error); // Propagate the error
   }
