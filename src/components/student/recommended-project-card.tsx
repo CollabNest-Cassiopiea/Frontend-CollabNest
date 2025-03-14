@@ -4,9 +4,8 @@ import { Badge } from "../ui/badge"
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "../ui/card"
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar"
 import { Progress } from "@/components/ui/progress"
-import { useNavigate } from "react-router-dom"
 
-interface ProjectCardProps {
+interface RecommendedProjectCardProps {
   title: string
   description: string
   mentor: {
@@ -15,27 +14,21 @@ interface ProjectCardProps {
   }
   progress: number
   tags?: string[]
-  projectId: number
+  onClick: () => void
 }
 
-export function ProjectCard({
+export function RecommendedProjectCard({
   title,
   description,
   mentor,
   progress,
   tags = [],
-  projectId,
-}: ProjectCardProps) {
-  const navigate = useNavigate()
-
-  const handleClick = () => {
-    navigate(`/projects/${projectId}`)
-  }
-
+  onClick,
+}: RecommendedProjectCardProps) {
   return (
     <Card
       className="h-full cursor-pointer transition-all hover:shadow-md"
-      onClick={handleClick}
+      onClick={onClick}
     >
       <CardHeader className="pb-2">
         <div className="flex items-start justify-between">

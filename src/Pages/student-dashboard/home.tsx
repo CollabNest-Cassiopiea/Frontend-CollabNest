@@ -3,6 +3,7 @@
 import { useState } from "react"
 import { DashboardLayout } from "@/components/student/dashboard-layout"
 import { ProjectCard } from "@/components/student/project-card"
+import { RecommendedProjectCard } from "@/components/student/recommended-project-card"
 import { MeetingCard } from "@/components/student/meeting-card"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
@@ -10,7 +11,6 @@ import { ProjectDetailModal } from "@/components/student/project-detail-modal"
 import type { Project } from "../../types/project"
 
 // Sample data - in a real app, this would come from an API
-
 const scheduledMeetings = [
   {
     id: 1,
@@ -41,7 +41,7 @@ export default function StudentDashboard() {
       status: "ongoing",
       leaderboard: [],
       discussion: [],
-      tasks: []
+      tasks: [],
     },
     {
       id: 2,
@@ -54,7 +54,7 @@ export default function StudentDashboard() {
       status: "ongoing",
       leaderboard: [],
       discussion: [],
-      tasks: []
+      tasks: [],
     },
     {
       id: 3,
@@ -67,7 +67,7 @@ export default function StudentDashboard() {
       status: "ongoing",
       leaderboard: [],
       discussion: [],
-      tasks: []
+      tasks: [],
     },
   ])
 
@@ -83,7 +83,7 @@ export default function StudentDashboard() {
       status: "available",
       leaderboard: [],
       discussion: [],
-      tasks: []
+      tasks: [],
     },
     {
       id: 5,
@@ -96,7 +96,7 @@ export default function StudentDashboard() {
       status: "available",
       leaderboard: [],
       discussion: [],
-      tasks: []
+      tasks: [],
     },
     {
       id: 6,
@@ -109,7 +109,7 @@ export default function StudentDashboard() {
       status: "available",
       leaderboard: [],
       discussion: [],
-      tasks: []
+      tasks: [],
     },
   ])
 
@@ -117,18 +117,17 @@ export default function StudentDashboard() {
   const [selectedProject, setSelectedProject] = useState<Project | null>(null)
 
   const handleJoinProject = (project: Project) => {
-    // Add mock status and required fields
     const mockJoinedProject: Project = {
       ...project,
       status: "ongoing",
       progress: 0,
       leaderboard: [],
-      discussion: []
-    };
-  
-    setOngoingProjects(prev => [...prev, mockJoinedProject]);
-    setRecommendedProjects(prev => prev.filter(p => p.id !== project.id));
-  };
+      discussion: [],
+    }
+
+    setOngoingProjects((prev) => [...prev, mockJoinedProject])
+    setRecommendedProjects((prev) => prev.filter((p) => p.id !== project.id))
+  }
 
   const handleProjectClick = (project: Project) => {
     setSelectedProject(project)
@@ -144,7 +143,7 @@ export default function StudentDashboard() {
     <DashboardLayout>
       <div className="container mx-auto p-4 md:p-6">
         <div className="mb-6">
-          <h1 className="text-2xl font-bold">Welcome back, John!</h1>
+          <h1 className="text-2xl font-bold">Welcome back, Diptanshu!</h1>
           <p className="text-muted-foreground">Here's an overview of your learning journey</p>
         </div>
 
@@ -169,6 +168,7 @@ export default function StudentDashboard() {
                     mentor={project.mentor}
                     progress={project.progress}
                     tags={project.tags}
+                    projectId={project.id}
                   />
                 ))}
               </div>
@@ -210,7 +210,7 @@ export default function StudentDashboard() {
             <CardContent>
               <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
                 {recommendedProjects.map((project) => (
-                  <ProjectCard
+                  <RecommendedProjectCard
                     key={project.id}
                     title={project.title}
                     description={project.description}
@@ -237,4 +237,3 @@ export default function StudentDashboard() {
     </DashboardLayout>
   )
 }
-
