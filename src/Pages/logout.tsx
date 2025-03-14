@@ -1,11 +1,18 @@
 import { useAuthStore } from "@/store/authStore";
 import React, { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
-const Loginpage: React.FC = () => {
+const Logoutpage: React.FC = () => {
   const { logout } = useAuthStore()
-    
+  let navigate = useNavigate();
+  
+  const logoutHandler = async() => {
+    await logout();
+    navigate('/');
+  }
+
   useEffect(() => {
-    logout();
+    logoutHandler()
   }, [])
 
   return (
@@ -13,4 +20,4 @@ const Loginpage: React.FC = () => {
   );
 };
 
-export default Loginpage;
+export default Logoutpage;

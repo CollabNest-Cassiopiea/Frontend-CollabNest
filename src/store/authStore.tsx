@@ -6,7 +6,7 @@ import { signInWithPopup } from "firebase/auth";
 import { OAuthProvider } from 'firebase/auth';
 import { firebaseAuth, microsoftProvider } from "../utils/firebase";
 
-const AUTH_API_URL = `http://localhost:3000/api/auth`
+const AUTH_API_URL = `/api/auth`
 axios.defaults.withCredentials = true;
 
 let api = axios.create({
