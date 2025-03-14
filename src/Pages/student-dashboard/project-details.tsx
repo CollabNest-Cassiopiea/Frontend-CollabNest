@@ -4,7 +4,7 @@ import { useEffect, useState } from "react"
 import { useParams } from "react-router-dom"
 import { Link } from "react-router-dom"
 import type { Project } from "@/types/project"
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card"
+import { Card, CardHeader, CardTitle, CardContent, CardDescription } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Calendar } from "@/components/ui/calendar"
@@ -13,6 +13,16 @@ import { Progress } from "@/components/ui/progress"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { DashboardLayout } from "@/components/student/dashboard-layout"
 import { Checkbox } from "@/components/ui/checkbox"
+import { CalendarIcon } from "@radix-ui/react-icons"
+import { format } from "date-fns"
+import { cn } from "@/lib/utils"
+import {
+    Popover,
+    PopoverContent,
+    PopoverTrigger,
+} from "@/components/ui/popover"
+import { Clock } from "lucide-react"
+
 
 // Mock data for development
 const getMockProject = (id: string): Project => ({
@@ -51,6 +61,7 @@ export function ProjectDetailsPage() {
     const [message, setMessage] = useState("")
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState("")
+    const [meetingTime, setMeetingTime] = useState("")
 
     useEffect(() => {
         const fetchProject = async () => {
@@ -193,29 +204,98 @@ export function ProjectDetailsPage() {
                         <Card>
                             <CardHeader>
                                 <CardTitle>Schedule Meeting</CardTitle>
+                                <CardDescription>Book a session with your mentor</CardDescription>
                             </CardHeader>
                             <CardContent className="space-y-4">
-                                <div className="rounded-md border p-3">
-                                    <Calendar
-                                        mode="single"
-                                        selected={scheduleDate}
-                                        onSelect={setScheduleDate}
-                                        className="w-full"
-                                        classNames={{
-                                            head_row: "grid grid-cols-7 gap-1",
-                                            row: "grid grid-cols-7 gap-1",
-                                            cell: "text-center",
-                                            nav: "flex justify-between mb-4",
-                                            month: "w-full"
-                                        }}
+                                <div className="grid grid-cols-2 gap-4">
+                                    <div className="space-y-2">
+                                        <label className="text-sm font-medium">Date</label>
+                                        <Popover>
+                                            <PopoverTrigger asChild>
+                                                <Button
+                                                    variant="outline"
+                                                    className={cn(
+                                                        "w-full justify-start text-left font-normal",
+                                                        !scheduleDate && "text-muted-foreground"
+                                                    )}
+                                                >
+                                                    <CalendarIcon className="mr-2 h-4 w-4" />
+                                                    {scheduleDate ? format(scheduleDate, "PPP") : "Pick a date"}
+                                                </Button>
+                                            </PopoverTrigger>
+                                            <PopoverContent className="w-auto p-0">
+                                                <Calendar
+                                                    mode="single"
+                                                    selected={scheduleDate}
+                                                    onSelect={setScheduleDate}
+                                                    initialFocus
+                                                    classNames={{
+                                                        head_row: "grid grid-cols-7 gap-0 w-[304px]",
+                                                        row: "grid grid-cols-7 gap-0 w-[304px]",
+                                                        cell: "text-center h-9 w-9",
+                                                        nav: "flex justify-between px-3 py-2",
+                                                        caption: "flex justify-center pt-2",
+                                                        day: "h-9 w-9 p-0",
+                                                    }}
+                                                />
+                                            </PopoverContent>
+                                        </Popover>
+                                    </div>
+
+                                    <div className="space-y-2">
+                                        <label className="text-sm font-medium">Time</label>
+                                        <Popover>
+                                            <PopoverTrigger asChild>
+                                                <Button
+                                                    variant="outline"
+                                                    className={cn(
+                                                        "w-full justify-start text-left font-normal",
+                                                        !meetingTime && "text-muted-foreground"
+                                                    )}
+                                                >
+                                                    <Clock className="mr-2 h-4 w-4" />
+                                                    {meetingTime || "Select time"}
+                                                </Button>
+                                            </PopoverTrigger>
+                                            <PopoverContent className="w-auto p-0">
+                                                <div className="p-2">
+                                                    <Input
+                                                        type="time"
+                                                        value={meetingTime}
+                                                        onChange={(e) => setMeetingTime(e.target.value)}
+                                                        className="border-0"
+                                                    />
+                                                </div>
+                                            </PopoverContent>
+                                        </Popover>
+                                    </div>
+                                </div>
+
+                                <div className="space-y-2">
+                                    <label className="text-sm font-medium">Meeting Topic</label>
+                                    <Input
+                                        placeholder="e.g., Project Progress Review"
+                                        value={meetingTopic}
+                                        onChange={(e) => setMeetingTopic(e.target.value)}
                                     />
                                 </div>
-                                <Input
-                                    value={meetingTopic}
-                                    onChange={(e) => setMeetingTopic(e.target.value)}
-                                    placeholder="Meeting topic"
-                                />
-                                <Button className="w-full">Schedule Meeting</Button>
+
+                                <Button
+                                    className="w-full"
+                                    onClick={() => {
+                                        if (!scheduleDate || !meetingTime) {
+                                            alert("Please select both date and time")
+                                            return
+                                        }
+                                        // Handle scheduling logic here
+                                        const [hours, minutes] = meetingTime.split(':').map(Number)
+                                        const meetingDate = new Date(scheduleDate)
+                                        meetingDate.setHours(hours, minutes)
+                                        console.log("Scheduled for:", meetingDate)
+                                    }}
+                                >
+                                    Schedule Meeting
+                                </Button>
                             </CardContent>
                         </Card>
                     </div>
