@@ -12,8 +12,6 @@ export interface FeatureCardProps {
     isActive: boolean;
   }
   
-  // If needed, you can add more interfaces for the component props
-
   // types.ts
 export interface Project {
   id: string;

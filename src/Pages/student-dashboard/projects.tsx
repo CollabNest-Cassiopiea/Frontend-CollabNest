@@ -120,8 +120,7 @@ export default function StudentProjects() {
                   description={project.description}
                   mentor={project.mentor}
                   progress={project.progress}
-                  tags={project.tags}
-                />
+                  tags={project.tags} projectId={0}                />
               ))}
             </div>
           </TabsContent>
@@ -135,8 +134,7 @@ export default function StudentProjects() {
                   description={project.description}
                   mentor={project.mentor}
                   progress={project.progress}
-                  tags={project.tags}
-                />
+                  tags={project.tags} projectId={0}                />
               ))}
             </div>
           </TabsContent>
@@ -150,8 +148,7 @@ export default function StudentProjects() {
                   description={project.description}
                   mentor={project.mentor}
                   progress={project.progress}
-                  tags={project.tags}
-                />
+                  tags={project.tags} projectId={0}                />
               ))}
             </div>
           </TabsContent>

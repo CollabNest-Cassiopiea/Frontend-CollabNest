@@ -8,12 +8,21 @@ import CertificatesPage from "@/pages/student-dashboard/certificates";
 import StudentProjects from "@/pages/student-dashboard/projects";
 import StudentProfile from "@/pages/student-dashboard/profile";
 import StudentNotifications from "@/pages/student-dashboard/notifications";
+import { ProjectDetailsPage } from "@/pages/student-dashboard/project-details";
+// Mentor
 import MentorDashboardPage from "@/pages/mentor-dashboard/home";
 import MentorProjectsPage from "@/pages/mentor-dashboard/projects";
 import MentorProfilePage from "@/pages/mentor-dashboard/profile";
 import MentorNotificationsPage from "@/pages/mentor-dashboard/notifications";
 import MentorApprovalsPage from "@/pages/mentor-dashboard/approvals";
+//professor
+import ProfessorDashboardPage from "@/pages/professor-dashboard/home";
+import ProfessorProjectsPage from "@/pages/professor-dashboard/projects";
+import ProfessorProfilePage from "@/pages/professor-dashboard/profile";
+import ProfessorNotificationsPage from "@/pages/professor-dashboard/notifications";
+import ProfessorApprovalsPage from "@/pages/professor-dashboard/approvals";
 
+//auth
 import { useAuthStore } from "@/store/authStore";
 import { ProtectedRoutes, RedirectAuthenticatedUser } from "./authRouter";
 import Logoutpage from "@/pages/logout";
@@ -47,6 +56,11 @@ const AppRouter: React.FC = () => {
                 <Route path="/student/projects" element={
                     <ProtectedRoutes student mentor admin>
                         <StudentProjects />
+                    </ProtectedRoutes>
+                } />
+                <Route path="/student/projects/:projectId" element={
+                    <ProtectedRoutes student mentor admin>
+                        <ProjectDetailsPage />
                     </ProtectedRoutes>
                 } />
                 <Route path="/student/profile" element={
@@ -84,7 +98,31 @@ const AppRouter: React.FC = () => {
                         <MentorApprovalsPage />
                     </ProtectedRoutes>
                 } />
-
+                <Route path="/professor" element={
+                    <ProtectedRoutes professor mentor admin>
+                        <ProfessorDashboardPage />
+                    </ProtectedRoutes>
+                } />
+                <Route path="/professor/projects" element={
+                    <ProtectedRoutes professor mentor admin>
+                        <ProfessorProjectsPage />
+                    </ProtectedRoutes>
+                } />
+                <Route path="/professor/profile" element={
+                    <ProtectedRoutes professor mentor admin>
+                        <ProfessorProfilePage />
+                    </ProtectedRoutes>
+                } />
+                <Route path="/professor/notifications" element={
+                    <ProtectedRoutes professor mentor admin>
+                        <ProfessorNotificationsPage />
+                    </ProtectedRoutes>
+                } />
+                <Route path="/professor/approvals" element={
+                    <ProtectedRoutes professor mentor admin>
+                        <ProfessorApprovalsPage/>
+                    </ProtectedRoutes>
+                } />
             </Routes>
         </Router>
     );

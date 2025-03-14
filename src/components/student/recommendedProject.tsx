@@ -1,4 +1,4 @@
-import ProjectCard from "../../components/student/projectCard";
+import { ProjectCard } from "../../components/student/project-card";
 import SearchBar from "./searchBar";
 import SectionHeader from "./sectionHeader";
 
@@ -26,9 +26,10 @@ const RecommendedProjectsSection: React.FC<RecommendedProjectsSectionProps> = ({
           <ProjectCard
             key={index}
             title={project.title}
-            description={project.description}
-            imageUrl={project.imageUrl}
-          />
+            description={project.description} mentor={{
+              name: "",
+              avatar: undefined
+            }} progress={0} projectId={0}          />
         ))}
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-4 gap-4 mt-4">
@@ -36,9 +37,10 @@ const RecommendedProjectsSection: React.FC<RecommendedProjectsSectionProps> = ({
           <ProjectCard
             key={index + 4}
             title={project.title}
-            description={project.description}
-            imageUrl={project.imageUrl}
-          />
+            description={project.description} mentor={{
+              name: "",
+              avatar: undefined
+            }} progress={0} projectId={0}          />
         ))}
       </div>
     </div>
