@@ -4,7 +4,6 @@ import { Badge } from "../ui/badge"
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "../ui/card"
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar"
 import { Progress } from "@/components/ui/progress"
-import { useNavigate } from "react-router-dom"
 
 interface ProjectCardProps {
   title: string
@@ -15,28 +14,12 @@ interface ProjectCardProps {
   }
   progress: number
   tags?: string[]
-  projectId: number
+  onClick?: () => void
 }
 
-export function ProjectCard({
-  title,
-  description,
-  mentor,
-  progress,
-  tags = [],
-  projectId,
-}: ProjectCardProps) {
-  const navigate = useNavigate()
-
-  const handleClick = () => {
-    navigate(`/projects/${projectId}`)
-  }
-
+export function ProjectCard({ title, description, mentor, progress, tags = [], onClick }: ProjectCardProps) {
   return (
-    <Card
-      className="h-full cursor-pointer transition-all hover:shadow-md"
-      onClick={handleClick}
-    >
+    <Card className="h-full cursor-pointer transition-all hover:shadow-md" onClick={onClick}>
       <CardHeader className="pb-2">
         <div className="flex items-start justify-between">
           <CardTitle className="line-clamp-1 text-lg">{title}</CardTitle>
@@ -71,3 +54,4 @@ export function ProjectCard({
     </Card>
   )
 }
+

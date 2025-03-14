@@ -19,4 +19,5 @@ export interface Mentor {
       text: string
       completed: boolean
     }[]
+    onClick?: () => void;
   }
