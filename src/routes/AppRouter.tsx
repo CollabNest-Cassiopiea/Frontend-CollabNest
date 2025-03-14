@@ -15,7 +15,7 @@ import MentorNotificationsPage from "@/pages/mentor-dashboard/notifications";
 import MentorApprovalsPage from "@/pages/mentor-dashboard/approvals";
 import { useAuthStore } from "@/store/authStore";
 import { ProtectedRoutes, RedirectAuthenticatedUser } from "./authRouter";
-import { LogOut } from "lucide-react";
+import Logoutpage from "@/pages/logout";
 
 const AppRouter: React.FC = () => {
     const {isCheckingAuth, checkAuth} = useAuthStore();
@@ -31,7 +31,7 @@ const AppRouter: React.FC = () => {
                         <SignUp />
                     </RedirectAuthenticatedUser>
                 } />
-                <Route path="/logout" element={<LogOut /> } />
+                <Route path="/logout" element={<Logoutpage /> } />
                 <Route path="/student" element={
                     <ProtectedRoutes student mentor admin>
                         <StudentDashboard />
