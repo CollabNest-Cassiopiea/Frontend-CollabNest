@@ -13,9 +13,11 @@ import MentorProjectsPage from "@/pages/mentor-dashboard/projects";
 import MentorProfilePage from "@/pages/mentor-dashboard/profile";
 import MentorNotificationsPage from "@/pages/mentor-dashboard/notifications";
 import MentorApprovalsPage from "@/pages/mentor-dashboard/approvals";
+
 import { useAuthStore } from "@/store/authStore";
 import { ProtectedRoutes, RedirectAuthenticatedUser } from "./authRouter";
 import Logoutpage from "@/pages/logout";
+
 
 const AppRouter: React.FC = () => {
     const {isCheckingAuth, checkAuth} = useAuthStore();
@@ -82,6 +84,7 @@ const AppRouter: React.FC = () => {
                         <MentorApprovalsPage />
                     </ProtectedRoutes>
                 } />
+
             </Routes>
         </Router>
     );
