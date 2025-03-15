@@ -1,21 +1,21 @@
+// ProjectCard.tsx
 "use client"
-
-import { Badge } from "../ui/badge"
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "../ui/card"
-import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar"
-import { Progress } from "@/components/ui/progress"
-import { useNavigate } from "react-router-dom"
+import { Badge } from "../ui/badge";
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "../ui/card";
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+import { Progress } from "@/components/ui/progress";
+import { useNavigate } from "react-router-dom";
 
 interface ProjectCardProps {
-  title: string
-  description: string
+  title: string;
+  description: string;
   mentor: {
-    name: string
-    avatar?: string
-  }
-  progress: number
-  tags?: string[]
-  projectId: number
+    name: string;
+    avatar?: string;
+  };
+  progress: number;
+  tags?: string[];
+  projectId: number;
 }
 
 export function ProjectCard({
@@ -26,17 +26,10 @@ export function ProjectCard({
   tags = [],
   projectId,
 }: ProjectCardProps) {
-  const navigate = useNavigate()
-
-  const handleClick = () => {
-    navigate(`/projects/${projectId}`)
-  }
+  const navigate = useNavigate();
 
   return (
-    <Card
-      className="h-full cursor-pointer transition-all hover:shadow-md"
-      onClick={handleClick}
-    >
+    <Card className="h-full cursor-pointer transition-all hover:shadow-md" onClick={() => navigate(`/projects/${projectId}`)}>
       <CardHeader className="pb-2">
         <div className="flex items-start justify-between">
           <CardTitle className="line-clamp-1 text-lg">{title}</CardTitle>
@@ -62,12 +55,19 @@ export function ProjectCard({
       <CardFooter>
         <div className="flex items-center gap-2">
           <Avatar className="h-6 w-6">
-            <AvatarImage src={mentor.avatar || "/placeholder.svg?height=24&width=24"} alt={mentor.name} />
-            <AvatarFallback>{mentor.name.charAt(0)}</AvatarFallback>
+          <AvatarImage src={mentor?.avatar || ""} alt={mentor?.name || "Unknown"} />
+<AvatarFallback>
+  {mentor?.name?.[0]?.toUpperCase() || "?"}
+</AvatarFallback>
+<span className="text-xs text-muted-foreground">
+  Mentor: {mentor?.name || "No Mentor"}
+</span>
           </Avatar>
-          <span className="text-xs text-muted-foreground">Mentor: {mentor.name}</span>
+          <span className="text-xs text-muted-foreground">
+            Mentor: {mentor.name}
+          </span>
         </div>
       </CardFooter>
     </Card>
-  )
+  );
 }
