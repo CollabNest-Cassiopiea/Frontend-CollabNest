@@ -116,8 +116,8 @@ export default function StudentDashboard() {
         }
 
         const ongoing = data.projects
-          .filter(project => project.status === "IN_PROGRESS")
-          .map(project => ({
+          .filter((project: { status: string }) => project.status === "IN_PROGRESS")
+          .map((project: { project_id: any; title: any; description: any; mentor: { name: any }; tech_stack: any }) => ({
             id: project.project_id,
             title: project.title,
             description: project.description,

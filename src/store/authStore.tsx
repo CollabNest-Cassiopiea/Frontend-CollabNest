@@ -28,6 +28,7 @@ api.interceptors.response.use(
 );
 
 interface User{
+  user_id(user_id: any): unknown;
   role: "STUDENT" | "MENTOR" | "PROFESSOR" | "ADMIN"
 }
 
