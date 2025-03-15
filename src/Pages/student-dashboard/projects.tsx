@@ -37,6 +37,7 @@ export default function StudentProjects() {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [studentId, setStudentId] = useState<string | null>(null);
+  const [studentSkills, setStudentSkills] = useState<string[]>([]); // To store the student's skills
 
   const navigate = useNavigate();
   const auth = getAuth();
@@ -45,6 +46,8 @@ export default function StudentProjects() {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
         setStudentId(user.uid);
+        // Assuming the student's skills are stored in Firebase user metadata or a user profile API
+        setStudentSkills(user?.skills || []);  // Adjust this if you have a different way to fetch skills
       } else {
         navigate("/login");
       }
@@ -63,27 +66,47 @@ export default function StudentProjects() {
 
         const token = await user.getIdToken();
 
-        console.log("🔥 Sending Token to Backend:", token);
-
-        const response = await fetch(`/api/students/projects`, {
+        // Fetch ongoing and completed projects from the previous endpoint
+        const responseOngoingCompleted = await fetch(`/api/students/projects`, {
           headers: {
             Authorization: `Bearer ${token}`,
             "Content-Type": "application/json",
           },
         });
 
-        if (!response.ok) {
-          const errorText = await response.text();
-          throw new Error(`Failed to fetch projects: ${errorText}`);
+        if (!responseOngoingCompleted.ok) {
+          const errorText = await responseOngoingCompleted.text();
+          throw new Error(`Failed to fetch ongoing/completed projects: ${errorText}`);
         }
 
-        const rawData: ApiResponse = await response.json();
-        console.log("✅ Raw API Response:", rawData);
+        const rawDataOngoingCompleted: ApiResponse = await responseOngoingCompleted.json();
+        console.log("✅ Raw API Response (Ongoing/Completed):", rawDataOngoingCompleted);
 
-        if (!rawData || !rawData.success || !Array.isArray(rawData.projects)) {
-          throw new Error("Invalid API response format");
+        if (!rawDataOngoingCompleted || !rawDataOngoingCompleted.success || !Array.isArray(rawDataOngoingCompleted.projects)) {
+          throw new Error("Invalid API response format for ongoing/completed projects");
         }
 
+        // Fetch available projects based on student's skills
+        const responseAvailable = await fetch(`/api/projects/?skills=${studentSkills.join(",")}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        });
+
+        if (!responseAvailable.ok) {
+          const errorText = await responseAvailable.text();
+          throw new Error(`Failed to fetch available projects: ${errorText}`);
+        }
+
+        const rawDataAvailable: ApiResponse = await responseAvailable.json();
+        console.log("✅ Raw API Response (Available):", rawDataAvailable);
+
+        if (!rawDataAvailable || !rawDataAvailable.success || !Array.isArray(rawDataAvailable.projects)) {
+          throw new Error("Invalid API response format for available projects");
+        }
+
+        // Transform the available projects to match the existing format
         const transformProjects = (projects: ApiResponse["projects"]) => {
           const ongoing: Project[] = [];
           const completed: Project[] = [];
@@ -123,12 +146,21 @@ export default function StudentProjects() {
           return { ongoing, completed, available };
         };
 
-        const { ongoing, completed, available } = transformProjects(rawData.projects);
-        console.log("Transformed Projects:", { ongoing, completed, available });
+        // Process ongoing/completed projects
+        const { ongoing, completed } = transformProjects(rawDataOngoingCompleted.projects);
+        console.log("Transformed Ongoing/Completed Projects:", { ongoing, completed });
 
+        // Set ongoing and completed projects state
         setOngoingProjects(ongoing);
         setCompletedProjects(completed);
+
+        // Process available projects
+        const { available } = transformProjects(rawDataAvailable.projects);
+        console.log("Transformed Available Projects:", available);
+
+        // Set available projects state
         setAvailableProjects(available);
+
         setLoading(false);
       } catch (error) {
         console.error("❌ Error fetching projects:", error);
@@ -138,7 +170,7 @@ export default function StudentProjects() {
     };
 
     fetchProjects();
-  }, [studentId, auth]);
+  }, [studentId, studentSkills, auth]);
 
   return (
     <DashboardLayout>
