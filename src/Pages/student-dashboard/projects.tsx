@@ -1,12 +1,12 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom"; // ✅ Correct for React
+import { useNavigate } from "react-router-dom";
 import { DashboardLayout } from "@/components/student/dashboard-layout";
 import { ProjectCard } from "@/components/student/project-card";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Input } from "@/components/ui/input";
 import { Search } from "lucide-react";
-import { getAuth, onAuthStateChanged } from "firebase/auth"; // Firebase auth
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 interface Project {
   id: number;
@@ -18,10 +18,16 @@ interface Project {
   status: "ongoing" | "completed" | "available";
 }
 
-interface StudentProjectsResponse {
-  ongoing: Project[];
-  completed: Project[];
-  available: Project[];
+interface ApiResponse {
+  success: boolean;
+  projects: {
+    project_id: number;
+    title: string;
+    description: string;
+    mentor: { name: string } | null;
+    tech_stack: string[];
+    status: string;
+  }[];
 }
 
 export default function StudentProjects() {
@@ -30,18 +36,17 @@ export default function StudentProjects() {
   const [availableProjects, setAvailableProjects] = useState<Project[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
-  const [studentId, setStudentId] = useState<string | null>(null); // Dynamic student ID
+  const [studentId, setStudentId] = useState<string | null>(null);
 
   const navigate = useNavigate();
   const auth = getAuth();
 
   useEffect(() => {
-    // Fetch the logged-in user's ID dynamically
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
         setStudentId(user.uid);
       } else {
-        navigate("/login"); // Redirect to login if not authenticated
+        navigate("/login");
       }
     });
 
@@ -50,79 +55,90 @@ export default function StudentProjects() {
 
   useEffect(() => {
     if (!studentId) return;
-  
+
     const fetchProjects = async () => {
       try {
         const user = auth.currentUser;
         if (!user) throw new Error("User not authenticated");
-  
+
         const token = await user.getIdToken();
-  
+
         console.log("🔥 Sending Token to Backend:", token);
-  
+
         const response = await fetch(`/api/students/projects`, {
           headers: {
             Authorization: `Bearer ${token}`,
             "Content-Type": "application/json",
           },
         });
-  
+
         if (!response.ok) {
           const errorText = await response.text();
           throw new Error(`Failed to fetch projects: ${errorText}`);
         }
-  
-        const rawData: StudentProjectsResponse = await response.json();
-        console.log("✅ Fetched Projects:", rawData);
-  
-        // Ensure rawData has expected structure
-        if (!rawData || typeof rawData !== "object") {
+
+        const rawData: ApiResponse = await response.json();
+        console.log("✅ Raw API Response:", rawData);
+
+        if (!rawData || !rawData.success || !Array.isArray(rawData.projects)) {
           throw new Error("Invalid API response format");
         }
-  
-        // ✅ Map project statuses correctly
-        const mapStatus = (status: string): "ongoing" | "completed" | "available" => {
-          switch (status) {
-            case "IN_PROGRESS":
-              return "ongoing";
-            case "CLOSED":
-              return "completed";
-            case "OPEN":
-              return "available";
-            default:
-              throw new Error(`Unexpected project status: ${status}`);
-          }
+
+        const transformProjects = (projects: ApiResponse["projects"]) => {
+          const ongoing: Project[] = [];
+          const completed: Project[] = [];
+          const available: Project[] = [];
+
+          projects.forEach((project) => {
+            const transformedProject: Project = {
+              id: project.project_id,
+              title: project.title,
+              description: project.description,
+              mentor: { name: project.mentor?.name || "Unknown Mentor" },
+              progress: 0, // Default progress (you can calculate this if needed)
+              tags: project.tech_stack || [],
+              status: project.status === "IN_PROGRESS"
+                ? "ongoing"
+                : project.status === "CLOSED"
+                ? "completed"
+                : "available",
+            };
+
+            switch (transformedProject.status) {
+              case "ongoing":
+                ongoing.push(transformedProject);
+                break;
+              case "completed":
+                completed.push(transformedProject);
+                break;
+              case "available":
+                available.push(transformedProject);
+                break;
+              default:
+                console.warn(`Unknown project status: ${project.status}`);
+                break;
+            }
+          });
+
+          return { ongoing, completed, available };
         };
-  
-        // ✅ Transform projects within each category
-        const transformProjects = (projects: any[]) =>
-          projects.map((project) => ({
-            id: project.id,
-            title: project.title,
-            description: project.description,
-            mentor: { name: project.mentor.name },
-            progress: project.progress,
-            tags: project.tags,
-            status: mapStatus(project.status),
-          }));
-  
-        // ✅ Set state with transformed data
-        setOngoingProjects(transformProjects(rawData.ongoing || []));
-        setCompletedProjects(transformProjects(rawData.completed || []));
-        setAvailableProjects(transformProjects(rawData.available || []));
+
+        const { ongoing, completed, available } = transformProjects(rawData.projects);
+        console.log("Transformed Projects:", { ongoing, completed, available });
+
+        setOngoingProjects(ongoing);
+        setCompletedProjects(completed);
+        setAvailableProjects(available);
         setLoading(false);
-      } catch (error: any) {
+      } catch (error) {
         console.error("❌ Error fetching projects:", error);
         setError(error instanceof Error ? error.message : String(error));
         setLoading(false);
       }
     };
-  
+
     fetchProjects();
   }, [studentId, auth]);
-  
-  
-
 
   return (
     <DashboardLayout>
