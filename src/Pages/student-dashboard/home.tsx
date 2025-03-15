@@ -1,6 +1,8 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
+import { useNavigate } from "react-router-dom"
+import { getAuth, onAuthStateChanged } from "firebase/auth"
 import { DashboardLayout } from "@/components/student/dashboard-layout"
 import { ProjectCard } from "@/components/student/project-card"
 import { RecommendedProjectCard } from "@/components/student/recommended-project-card"
@@ -10,7 +12,6 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { ProjectDetailModal } from "@/components/student/project-detail-modal"
 import type { Project } from "../../types/project"
 
-// Sample data - in a real app, this would come from an API
 const scheduledMeetings = [
   {
     id: 1,
@@ -29,49 +30,8 @@ const scheduledMeetings = [
 ]
 
 export default function StudentDashboard() {
-  const [ongoingProjects, setOngoingProjects] = useState<Project[]>([
-    {
-      id: 1,
-      title: "Web Development Portfolio",
-      description: "Create a professional portfolio website showcasing your projects and skills using React and Tailwind CSS.",
-      mentor: { name: "Dr. Sarah Johnson" },
-      progress: 65,
-      tags: ["Frontend"],
-      techStack: [],
-      status: "ongoing",
-      leaderboard: [],
-      discussion: [],
-      tasks: [],
-    },
-    {
-      id: 2,
-      title: "Machine Learning Image Classifier",
-      description: "Build an image classification model using TensorFlow to identify objects in photographs.",
-      mentor: { name: "Prof. Michael Chen" },
-      progress: 30,
-      tags: ["AI/ML"],
-      techStack: [],
-      status: "ongoing",
-      leaderboard: [],
-      discussion: [],
-      tasks: [],
-    },
-    {
-      id: 3,
-      title: "Mobile App Development",
-      description: "Develop a cross-platform mobile application using React Native for task management.",
-      mentor: { name: "Alex Rodriguez" },
-      progress: 45,
-      tags: ["Mobile"],
-      techStack: [],
-      status: "ongoing",
-      leaderboard: [],
-      discussion: [],
-      tasks: [],
-    },
-  ])
-
-  const [recommendedProjects, setRecommendedProjects] = useState<Project[]>([
+  const [ongoingProjects, setOngoingProjects] = useState<Project[]>([])
+  const [recommendedProjects] = useState<Project[]>([
     {
       id: 4,
       title: "Blockchain Smart Contract",
@@ -112,9 +72,76 @@ export default function StudentDashboard() {
       tasks: [],
     },
   ])
-
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
+  const [studentId, setStudentId] = useState<string | null>(null)
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [selectedProject, setSelectedProject] = useState<Project | null>(null)
+  const navigate = useNavigate()
+  const auth = getAuth()
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setStudentId(user.uid)
+      } else {
+        navigate("/login")
+      }
+    })
+    return () => unsubscribe()
+  }, [auth, navigate])
+
+  useEffect(() => {
+    if (!studentId) return
+
+    const fetchProjects = async () => {
+      try {
+        const user = auth.currentUser
+        if (!user) throw new Error("User not authenticated")
+        
+        const token = await user.getIdToken()
+        const response = await fetch(`/api/students/projects`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        })
+
+        if (!response.ok) throw new Error("Failed to fetch projects")
+        
+        const data = await response.json()
+        
+        if (!data.success || !Array.isArray(data.projects)) {
+          throw new Error("Invalid data format")
+        }
+
+        const ongoing = data.projects
+          .filter(project => project.status === "IN_PROGRESS")
+          .map(project => ({
+            id: project.project_id,
+            title: project.title,
+            description: project.description,
+            mentor: { name: project.mentor?.name || "Unknown Mentor" },
+            progress: 0,
+            tags: project.tech_stack || [],
+            status: "ongoing",
+            techStack: project.tech_stack || [],
+            leaderboard: [],
+            discussion: [],
+            tasks: []
+          }))
+
+        setOngoingProjects(ongoing)
+        setLoading(false)
+      } catch (error) {
+        console.error("Error fetching projects:", error)
+        setError(error instanceof Error ? error.message : "Unknown error")
+        setLoading(false)
+      }
+    }
+
+    fetchProjects()
+  }, [studentId, auth])
 
   const handleJoinProject = (project: Project) => {
     const mockJoinedProject: Project = {
@@ -126,7 +153,6 @@ export default function StudentDashboard() {
     }
 
     setOngoingProjects((prev) => [...prev, mockJoinedProject])
-    setRecommendedProjects((prev) => prev.filter((p) => p.id !== project.id))
   }
 
   const handleProjectClick = (project: Project) => {
@@ -159,19 +185,32 @@ export default function StudentDashboard() {
               <CardDescription>Pick up where you left off</CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                {ongoingProjects.map((project) => (
-                  <ProjectCard
-                    key={project.id}
-                    title={project.title}
-                    description={project.description}
-                    mentor={project.mentor}
-                    progress={project.progress}
-                    tags={project.tags}
-                    projectId={project.id}
-                  />
-                ))}
-              </div>
+              {loading ? (
+                <div>Loading projects...</div>
+              ) : error ? (
+                <div className="text-red-500">{error}</div>
+              ) : ongoingProjects.length === 0 ? (
+                <div className="text-center py-8">
+                  <p className="text-lg font-semibold mb-2">No active projects!</p>
+                  <Button onClick={() => navigate("/projects")}>
+                    Find Projects
+                  </Button>
+                </div>
+              ) : (
+                <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                  {ongoingProjects.map((project) => (
+                    <ProjectCard
+                      key={project.id}
+                      title={project.title}
+                      description={project.description}
+                      mentor={project.mentor}
+                      progress={project.progress}
+                      tags={project.tags}
+                      projectId={project.id}
+                    />
+                  ))}
+                </div>
+              )}
             </CardContent>
           </Card>
 
@@ -224,16 +263,16 @@ export default function StudentDashboard() {
             </CardContent>
           </Card>
         </div>
-      </div>
 
-      {selectedProject && (
-        <ProjectDetailModal
-          isOpen={isModalOpen}
-          onClose={handleCloseModal}
-          project={selectedProject}
-          onJoin={handleJoinProject}
-        />
-      )}
+        {selectedProject && (
+          <ProjectDetailModal
+            isOpen={isModalOpen}
+            onClose={handleCloseModal}
+            project={selectedProject}
+            onJoin={handleJoinProject}
+          />
+        )}
+      </div>
     </DashboardLayout>
   )
 }
