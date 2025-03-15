@@ -45,14 +45,13 @@ interface AuthState {
 
 export const useAuthStore = create<AuthState>((set) => {
   const user_raw = localStorage.getItem("user");
-  console.log(user_raw);
+  
   let user;
   try{
     user = user_raw?JSON.parse(user_raw):null
   }catch{
     user = null;
   }
-  console.log(user);
   return {
 	user: user,
 	isAuthenticated: localStorage.getItem('auth') === "true",
