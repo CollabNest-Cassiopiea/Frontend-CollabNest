@@ -1,50 +1,49 @@
-import { DashboardLayout } from "@/components/student/dashboard-layout"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Badge } from "@/components/ui/badge"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Edit, Mail, MapPin, Phone, School } from "lucide-react"
+import { DashboardLayout } from "@/components/student/dashboard-layout";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Edit, School } from "lucide-react";
+import { useEffect, useState } from "react";
+import axios from "axios";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { useAuthStore } from "@/store/authStore";
 
-// Sample data - in a real app, this would come from an API
-const profileData = {
-  name: "John Doe",
-  email: "john.doe@university.edu",
-  phone: "+1 (555) 123-4567",
-  location: "San Francisco, CA",
-  university: "State University",
-  department: "Computer Science",
-  year: "3rd Year",
-  bio: "Passionate computer science student with interests in web development, machine learning, and cybersecurity. Looking to collaborate on innovative projects and expand my technical skills.",
-  skills: ["JavaScript", "React", "Node.js", "Python", "TensorFlow", "SQL", "Git", "Docker", "AWS", "UI/UX Design"],
-  interests: ["Web Development", "Machine Learning", "Cybersecurity", "Cloud Computing", "Mobile App Development"],
-  achievements: [
-    { title: "Hackathon Winner", date: "October 2022" },
-    { title: "Dean's List", date: "Spring 2022" },
-    { title: "Open Source Contributor", date: "2021-Present" },
-  ],
-  education: [
-    {
-      institution: "State University",
-      degree: "Bachelor of Science in Computer Science",
-      date: "2020-2024 (Expected)",
-    },
-  ],
-  projects: [
-    {
-      title: "E-commerce Platform",
-      description: "Developed a full-stack e-commerce platform using MERN stack",
-      date: "January 2023",
-    },
-    {
-      title: "Sentiment Analysis Tool",
-      description: "Created a machine learning model to analyze customer reviews",
-      date: "November 2022",
-    },
-  ],
+// Define the profile data type based on the schema
+interface ProfileData {
+  name: string;
+  bio: string;
+  skills: string[];
+  experience: string;
+  branch: string;
+  year: number;
+  rollno: string;
 }
 
 export default function StudentProfile() {
+  const [profileData, setProfileData] = useState<ProfileData | null>(null);
+  const { user, isAuthenticated } = useAuthStore();
+
+  useEffect(() => {
+    if (isAuthenticated && user) {
+      fetchProfileData(Number(user.user_id)); // Ensure user_id is a number
+    }
+  }, [isAuthenticated, user]);
+
+  const fetchProfileData = async (userId: number) => {
+    try {
+      const response = await axios.get(`/api/student-profiles/${userId}/profile`);
+      setProfileData(response.data);
+    } catch (error) {
+      console.error("Failed to fetch profile data:", error);
+    }
+  };
+
+  if (!profileData) {
+    return <div>Loading...</div>;
+  }
+
   return (
     <DashboardLayout>
       <div className="container mx-auto p-4 md:p-6">
@@ -54,17 +53,18 @@ export default function StudentProfile() {
         </div>
 
         <div className="grid gap-6 md:grid-cols-3">
+          {/* Left Column: Profile Overview */}
           <Card className="md:col-span-1">
             <CardHeader className="text-center">
               <div className="mx-auto mb-4">
                 <Avatar className="h-24 w-24">
                   <AvatarImage src="/placeholder.svg?height=96&width=96" alt="Profile" />
-                  <AvatarFallback>JD</AvatarFallback>
+                  <AvatarFallback>{profileData.name.charAt(0)}</AvatarFallback>
                 </Avatar>
               </div>
               <CardTitle>{profileData.name}</CardTitle>
               <CardDescription>
-                {profileData.department}, {profileData.year}
+                {profileData.branch}, Year {profileData.year}
               </CardDescription>
               <Button variant="outline" size="sm" className="mt-2 gap-2">
                 <Edit className="h-3.5 w-3.5" />
@@ -73,25 +73,13 @@ export default function StudentProfile() {
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
-                <div className="space-y-2">
-                  <div className="flex items-center gap-2 text-sm">
-                    <Mail className="h-4 w-4 text-muted-foreground" />
-                    <span>{profileData.email}</span>
-                  </div>
-                  <div className="flex items-center gap-2 text-sm">
-                    <Phone className="h-4 w-4 text-muted-foreground" />
-                    <span>{profileData.phone}</span>
-                  </div>
-                  <div className="flex items-center gap-2 text-sm">
-                    <MapPin className="h-4 w-4 text-muted-foreground" />
-                    <span>{profileData.location}</span>
-                  </div>
-                  <div className="flex items-center gap-2 text-sm">
-                    <School className="h-4 w-4 text-muted-foreground" />
-                    <span>{profileData.university}</span>
-                  </div>
+                {/* Roll Number */}
+                <div className="flex items-center gap-2 text-sm">
+                  <School className="h-4 w-4 text-muted-foreground" />
+                  <span>Roll No: {profileData.rollno}</span>
                 </div>
 
+                {/* Skills */}
                 <div>
                   <h3 className="mb-2 text-sm font-medium">Skills</h3>
                   <div className="flex flex-wrap gap-1">
@@ -103,58 +91,41 @@ export default function StudentProfile() {
                   </div>
                 </div>
 
+                {/* Experience */}
                 <div>
-                  <h3 className="mb-2 text-sm font-medium">Interests</h3>
-                  <div className="flex flex-wrap gap-1">
-                    {profileData.interests.map((interest) => (
-                      <Badge key={interest} variant="outline" className="text-xs">
-                        {interest}
-                      </Badge>
-                    ))}
-                  </div>
+                  <h3 className="mb-2 text-sm font-medium">Experience</h3>
+                  <p className="text-sm text-muted-foreground">{profileData.experience}</p>
                 </div>
               </div>
             </CardContent>
           </Card>
 
+          {/* Right Column: Bio and Additional Details */}
           <Card className="md:col-span-2">
             <CardHeader>
               <CardTitle>About Me</CardTitle>
             </CardHeader>
             <CardContent>
+              {/* Bio */}
               <p className="text-sm text-muted-foreground">{profileData.bio}</p>
 
-              <Tabs defaultValue="achievements" className="mt-6">
-                <TabsList className="grid w-full grid-cols-3">
-                  <TabsTrigger value="achievements">Achievements</TabsTrigger>
-                  <TabsTrigger value="education">Education</TabsTrigger>
-                  <TabsTrigger value="projects">Projects</TabsTrigger>
+              {/* Tabs for Additional Details */}
+              <Tabs defaultValue="skills" className="mt-6">
+                <TabsList className="grid w-full grid-cols-2">
+                  <TabsTrigger value="skills">Skills</TabsTrigger>
+                  <TabsTrigger value="experience">Experience</TabsTrigger>
                 </TabsList>
-                <TabsContent value="achievements" className="mt-4 space-y-4">
-                  {profileData.achievements.map((achievement, index) => (
-                    <div key={index} className="flex justify-between border-b pb-2 last:border-0">
-                      <span className="font-medium">{achievement.title}</span>
-                      <span className="text-sm text-muted-foreground">{achievement.date}</span>
-                    </div>
-                  ))}
+                <TabsContent value="skills" className="mt-4">
+                  <div className="flex flex-wrap gap-1">
+                    {profileData.skills.map((skill) => (
+                      <Badge key={skill} variant="secondary" className="text-xs">
+                        {skill}
+                      </Badge>
+                    ))}
+                  </div>
                 </TabsContent>
-                <TabsContent value="education" className="mt-4 space-y-4">
-                  {profileData.education.map((edu, index) => (
-                    <div key={index} className="space-y-1 border-b pb-2 last:border-0">
-                      <div className="font-medium">{edu.institution}</div>
-                      <div className="text-sm">{edu.degree}</div>
-                      <div className="text-sm text-muted-foreground">{edu.date}</div>
-                    </div>
-                  ))}
-                </TabsContent>
-                <TabsContent value="projects" className="mt-4 space-y-4">
-                  {profileData.projects.map((project, index) => (
-                    <div key={index} className="space-y-1 border-b pb-2 last:border-0">
-                      <div className="font-medium">{project.title}</div>
-                      <div className="text-sm text-muted-foreground">{project.description}</div>
-                      <div className="text-xs text-muted-foreground">{project.date}</div>
-                    </div>
-                  ))}
+                <TabsContent value="experience" className="mt-4">
+                  <p className="text-sm text-muted-foreground">{profileData.experience}</p>
                 </TabsContent>
               </Tabs>
             </CardContent>
@@ -162,6 +133,5 @@ export default function StudentProfile() {
         </div>
       </div>
     </DashboardLayout>
-  )
+  );
 }
-
