@@ -1,20 +1,25 @@
-"use client"
-
-import { Badge } from "../ui/badge"
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "../ui/card"
-import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar"
-import { Progress } from "@/components/ui/progress"
+"use client";
+import { Badge } from "../ui/badge";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "../ui/card";
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+import { Progress } from "@/components/ui/progress";
 
 interface RecommendedProjectCardProps {
-  title: string
-  description: string
+  title: string;
+  description: string;
   mentor: {
-    name: string
-    avatar?: string
-  }
-  progress: number
-  tags?: string[]
-  onClick: () => void
+    name: string;
+    avatar?: string;
+  };
+  progress: number;
+  tags?: string[];
+  onClick: () => void;
 }
 
 export function RecommendedProjectCard({
@@ -43,7 +48,9 @@ export function RecommendedProjectCard({
         </div>
       </CardHeader>
       <CardContent className="pb-2">
-        <p className="line-clamp-2 text-sm text-muted-foreground">{description}</p>
+        <p className="line-clamp-2 text-sm text-muted-foreground">
+          {description}
+        </p>
         <div className="mt-4 space-y-1">
           <div className="flex items-center justify-between text-xs">
             <span>Progress</span>
@@ -55,12 +62,17 @@ export function RecommendedProjectCard({
       <CardFooter>
         <div className="flex items-center gap-2">
           <Avatar className="h-6 w-6">
-            <AvatarImage src={mentor.avatar || "/placeholder.svg?height=24&width=24"} alt={mentor.name} />
-            <AvatarFallback>{mentor.name.charAt(0)}</AvatarFallback>
+            <AvatarImage
+              src={mentor?.avatar || "/placeholder.svg?height=24&width=24"}
+              alt={mentor?.name}
+            />
+            <AvatarFallback>{mentor?.name.charAt(0)}</AvatarFallback>
           </Avatar>
-          <span className="text-xs text-muted-foreground">Mentor: {mentor.name}</span>
+          <span className="text-xs text-muted-foreground">
+            Mentor: {mentor?.name}
+          </span>
         </div>
       </CardFooter>
     </Card>
-  )
+  );
 }
