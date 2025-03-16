@@ -4,55 +4,120 @@ import { Card, CardContent, CardHeader, CardTitle } from "../../components/ui/ca
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../../components/ui/tabs"
 import { Badge } from "../../components/ui/badge"
 import { Bell, Calendar, CheckCircle, Clock, MessageSquare } from "lucide-react"
+import { useEffect, useState } from "react"
+import { useAuthStore } from "@/store/authStore"
+import axios from "axios"
+
+interface Notification {
+  id: number;
+  title: string;
+  message: string;
+  time: string;
+  type: string;
+  read: boolean;
+}
+
 
 // Sample data - in a real app, this would come from an API
-const notifications = [
-  {
-    id: 1,
-    title: "Project Feedback Received",
-    message: "Dr. Sarah Johnson has provided feedback on your Web Development Portfolio project.",
-    time: "2 hours ago",
-    type: "feedback",
-    read: false,
-  },
-  {
-    id: 2,
-    title: "Meeting Scheduled",
-    message: "Weekly check-in with Prof. Michael Chen has been scheduled for May 17, 10:30 AM.",
-    time: "Yesterday",
-    type: "meeting",
-    read: false,
-  },
-  {
-    id: 3,
-    title: "Deadline Reminder",
-    message: "The submission deadline for Machine Learning Image Classifier project is in 3 days.",
-    time: "Yesterday",
-    type: "deadline",
-    read: true,
-  },
-  {
-    id: 4,
-    title: "Certificate Issued",
-    message: "You have been issued a certificate for completing the Database Design Project.",
-    time: "3 days ago",
-    type: "certificate",
-    read: true,
-  },
-  {
-    id: 5,
-    title: "New Project Available",
-    message: "A new project 'Cloud-based Microservices' matching your interests is now available.",
-    time: "5 days ago",
-    type: "project",
-    read: true,
-  },
-]
+// const notifications = [
+//   {
+//     id: 1,
+//     title: "Project Feedback Received",
+//     message: "Dr. Sarah Johnson has provided feedback on your Web Development Portfolio project.",
+//     time: "2 hours ago",
+//     type: "feedback",
+//     read: false,
+//   },
+//   {
+//     id: 2,
+//     title: "Meeting Scheduled",
+//     message: "Weekly check-in with Prof. Michael Chen has been scheduled for May 17, 10:30 AM.",
+//     time: "Yesterday",
+//     type: "meeting",
+//     read: false,
+//   },
+//   {
+//     id: 3,
+//     title: "Deadline Reminder",
+//     message: "The submission deadline for Machine Learning Image Classifier project is in 3 days.",
+//     time: "Yesterday",
+//     type: "deadline",
+//     read: true,
+//   },
+//   {
+//     id: 4,
+//     title: "Certificate Issued",
+//     message: "You have been issued a certificate for completing the Database Design Project.",
+//     time: "3 days ago",
+//     type: "certificate",
+//     read: true,
+//   },
+//   {
+//     id: 5,
+//     title: "New Project Available",
+//     message: "A new project 'Cloud-based Microservices' matching your interests is now available.",
+//     time: "5 days ago",
+//     type: "project",
+//     read: true,
+//   },
+// ]
 
 export default function StudentNotifications() {
+  const [notifications, setNotifications] = useState<Notification[]>([]);
+
   const unreadCount = notifications.filter((n) => !n.read).length
   const allNotifications = [...notifications]
   const unreadNotifications = notifications.filter((n) => !n.read)
+  const [loading, setLoading] = useState(false);
+  
+  const { user, isAuthenticated } = useAuthStore();
+  
+
+  const markAllAsRead = async () => {
+    try {
+      setLoading(true);
+      await axios.put(`/api/notifications/${user.user_id}/read-all`);
+      
+      // Update local state instead of refetching
+      setNotifications((prev) =>
+        prev.map((notification) => ({ ...notification, read: true }))
+      );
+    } catch (error) {
+      console.error("Failed to mark all as read:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    if (isAuthenticated && user) {
+      fetchnotifications(Number(user.user_id)); // Ensure user_id is a number
+    }
+  }, [isAuthenticated, user]);
+
+ 
+    const fetchnotifications=async (userId: number)=>{
+      try {
+        
+        if (!user) throw new Error("User not authenticated");
+
+      
+
+        // Fetch ongoing and completed projects from the previous endpoint
+        const responseOngoingCompleted = await axios.get(`/api/notifications/${userId}`);
+        if(!responseOngoingCompleted.data.success){
+          throw new Error("Error while fetching Notifications");
+        }
+        setNotifications(responseOngoingCompleted.data.notifications)
+
+        console.log(responseOngoingCompleted);
+        
+      } catch (error) {
+        console.error("❌ Error fetching projects:", error);
+      }
+    }
+
+
 
   const getIcon = (type: string) => {
     switch (type) {
@@ -78,7 +143,7 @@ export default function StudentNotifications() {
             <p className="text-muted-foreground">Stay updated with your project activities</p>
           </div>
           <div className="flex gap-2">
-            <Button variant="outline">Mark All as Read</Button>
+            <Button variant="outline" onClick={markAllAsRead} disabled={loading} > {loading ? "Updating..." : "Mark All as Read"} </Button>
             <Button variant="outline">Settings</Button>
           </div>
         </div>
