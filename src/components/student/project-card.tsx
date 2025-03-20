@@ -1,4 +1,3 @@
-// ProjectCard.tsx
 "use client"
 import { Badge } from "../ui/badge";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "../ui/card";
@@ -25,7 +24,7 @@ export function ProjectCard({
   progress,
   tags = [],
   projectId,
-}: ProjectCardProps) {
+}: ProjectCardProps & { onClick?: () => void }) {
   const navigate = useNavigate();
 
   return (
@@ -34,15 +33,13 @@ export function ProjectCard({
       onClick={() => navigate(`/student/projects/${projectId}`)}
     >
       <CardHeader className="pb-2">
-        <div className="space-y-2">
-          <CardTitle className="line-clamp-1 text-lg">{title}</CardTitle>
-          <div className="flex flex-wrap gap-1">
-            {tags.map((tag) => (
-              <Badge key={tag} variant="outline" className="text-xs">
-                {tag}
-              </Badge>
-            ))}
-          </div>
+        <CardTitle className="line-clamp-1 text-lg mb-2">{title}</CardTitle>
+        <div className="flex flex-wrap gap-1">
+          {tags.map((tag) => (
+            <Badge key={tag} variant="outline" className="text-xs">
+              {tag}
+            </Badge>
+          ))}
         </div>
       </CardHeader>
       <CardContent className="pb-2 flex-1">

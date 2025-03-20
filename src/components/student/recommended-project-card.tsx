@@ -36,15 +36,13 @@ export function RecommendedProjectCard({
       onClick={onClick}
     >
       <CardHeader className="pb-2">
-        <div className="flex items-start justify-between">
-          <CardTitle className="line-clamp-1 text-lg">{title}</CardTitle>
-          <div className="flex gap-1">
-            {tags.map((tag) => (
-              <Badge key={tag} variant="outline" className="text-xs">
-                {tag}
-              </Badge>
-            ))}
-          </div>
+        <CardTitle className="line-clamp-1 text-lg mb-2">{title}</CardTitle>
+        <div className="flex flex-wrap gap-1">
+          {tags.map((tag) => (
+            <Badge key={tag} variant="outline" className="text-xs">
+              {tag}
+            </Badge>
+          ))}
         </div>
       </CardHeader>
       <CardContent className="pb-2">
