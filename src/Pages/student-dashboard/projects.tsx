@@ -47,7 +47,19 @@ export default function StudentProjects() {
       if (user) {
         setStudentId(user.uid);
         // Assuming the student's skills are stored in Firebase user metadata or a user profile API
-        setStudentSkills(user?.skills || []);  // Adjust this if you have a different way to fetch skills
+        // Fetch student's skills from a user profile API or another source
+        fetch(`/api/user/${user.uid}/skills`, {
+          headers: {
+            Authorization: `Bearer ${user.getIdToken()}`,
+            "Content-Type": "application/json",
+          },
+        })
+          .then((response) => response.json())
+          .then((data) => setStudentSkills(data.skills || []))
+          .catch((error) => {
+            console.error("Failed to fetch student skills:", error);
+            setStudentSkills([]);
+          });
       } else {
         navigate("/login");
       }
@@ -191,7 +203,6 @@ export default function StudentProjects() {
                 className="w-full pl-8"
               />
             </div>
-            <Button>New Project</Button>
           </div>
         </div>
 
