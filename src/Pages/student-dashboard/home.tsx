@@ -202,6 +202,8 @@ export default function StudentDashboard() {
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
+      console.log(user);
+      
       if (user) {
         setStudentId(user.uid);
       } else {
