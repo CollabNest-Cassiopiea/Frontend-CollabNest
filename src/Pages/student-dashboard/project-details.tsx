@@ -1,5 +1,4 @@
 "use client"
-
 import { useEffect, useState } from "react"
 import { useParams } from "react-router-dom"
 import { Link } from "react-router-dom"
@@ -22,34 +21,35 @@ import {
     PopoverTrigger,
 } from "@/components/ui/popover"
 import { Clock } from "lucide-react"
+import { formatDistanceToNow } from "date-fns"
 
+// Mock current user
+const currentUser = { name: "John Student" }
 
-// Mock data for development
 const getMockProject = (id: string): Project => ({
     id: Number.parseInt(id),
     title: `Project ${id}`,
-    description: "This is a sample project description. In a real application, this would be fetched from an API.",
+    description: "This is a sample project description.",
     progress: 65,
     leaderboard: [
         { name: "Emma Wilson", points: 850 },
         { name: "John Doe", points: 720 },
-        { name: "Michael Brown", points: 680 },
     ],
     discussion: [
-        { user: { name: "Dr. Sarah Johnson" }, text: "Welcome to the Web Development Portfolio project! Please introduce yourselves and share your goals for this project.", date: "2 days ago" },
-        { user: { name: "John Doe" }, text: "I'm excited to work on this project. My goal is to create a portfolio that showcases my React skills and helps me land a frontend developer role.", date: "1 day ago" },
+        {
+            user: { name: "Mentor" },
+            text: "Welcome to the project! Let's get started.",
+            date: new Date(Date.now() - 3600000).toISOString() // 1 hour ago
+        }
     ],
-    techStack: ["React", "TypeScript", "Tailwind CSS"],
+    techStack: ["React", "TypeScript"],
     mentor: { name: "Dr. Sarah Johnson" },
     tags: ["Frontend"],
     status: "ongoing",
     tasks: [
         { id: 1, text: "Setup project repository", completed: true },
         { id: 2, text: "Create homepage layout", completed: true },
-        { id: 3, text: "Implement responsive design", completed: true },
-        { id: 4, text: "Add projects section", completed: false },
-        { id: 5, text: "Create contact form", completed: false },
-        { id: 6, text: "Deploy to Vercel", completed: false },
+        { id: 3, text: "Implement responsive design", completed: false },
     ]
 })
 
@@ -60,24 +60,32 @@ export function ProjectDetailsPage() {
     const [meetingTopic, setMeetingTopic] = useState("")
     const [message, setMessage] = useState("")
     const [loading, setLoading] = useState(true)
-    const [error, setError] = useState("")
     const [meetingTime, setMeetingTime] = useState("")
 
     useEffect(() => {
-        const fetchProject = async () => {
-            try {
-                setProject(getMockProject(projectId as string));
-                setLoading(false);
-            } catch (err) {
-                console.error("Error loading project:", err);
-                setLoading(false);
-            }
-        };
-        fetchProject();
-    }, [projectId]);
+        setProject(getMockProject(projectId as string))
+        setLoading(false)
+    }, [projectId])
+
+    const handleSendMessage = (e: React.FormEvent) => {
+        e.preventDefault()
+        if (!message.trim() || !project) return
+
+        const newMessage = {
+            user: currentUser,
+            text: message,
+            date: new Date().toISOString()
+        }
+
+        setProject({
+            ...project,
+            discussion: [...project.discussion, newMessage]
+        })
+
+        setMessage("")
+    }
 
     if (loading) return <div className="p-6 text-center">Loading...</div>
-    if (error) return <div className="p-6 text-center text-destructive">{error}</div>
     if (!project) return <div className="p-6 text-center">Project not found</div>
 
     return (
@@ -134,7 +142,7 @@ export function ProjectDetailsPage() {
                         {/* Discussion */}
                         <Card>
                             <CardHeader>
-                                <CardTitle>Discussion Thread</CardTitle>
+                                <CardTitle>Discussion</CardTitle>
                             </CardHeader>
                             <CardContent className="space-y-6">
                                 <div className="space-y-4">
@@ -146,21 +154,25 @@ export function ProjectDetailsPage() {
                                             <div className="flex-1">
                                                 <div className="flex items-center gap-2">
                                                     <p className="font-medium">{msg.user.name}</p>
-                                                    <span className="text-sm text-muted-foreground">{msg.date}</span>
+                                                    <span className="text-sm text-muted-foreground">
+                                                        {formatDistanceToNow(msg.date)} ago
+                                                    </span>
                                                 </div>
                                                 <p className="text-muted-foreground mt-1">{msg.text}</p>
                                             </div>
                                         </div>
                                     ))}
                                 </div>
-                                <div className="flex gap-2">
+                                <form onSubmit={handleSendMessage} className="flex gap-2">
                                     <Input
                                         value={message}
                                         onChange={(e) => setMessage(e.target.value)}
-                                        placeholder="Type your message here..."
+                                        placeholder="Type your message..."
                                     />
-                                    <Button>Post</Button>
-                                </div>
+                                    <Button type="submit" disabled={!message.trim()}>
+                                        Send
+                                    </Button>
+                                </form>
                             </CardContent>
                         </Card>
                     </div>
@@ -229,14 +241,6 @@ export function ProjectDetailsPage() {
                                                     selected={scheduleDate}
                                                     onSelect={setScheduleDate}
                                                     initialFocus
-                                                    classNames={{
-                                                        head_row: "grid grid-cols-7 gap-0 w-[304px]",
-                                                        row: "grid grid-cols-7 gap-0 w-[304px]",
-                                                        cell: "text-center h-9 w-9",
-                                                        nav: "flex justify-between px-3 py-2",
-                                                        caption: "flex justify-center pt-2",
-                                                        day: "h-9 w-9 p-0",
-                                                    }}
                                                 />
                                             </PopoverContent>
                                         </Popover>
@@ -287,11 +291,7 @@ export function ProjectDetailsPage() {
                                             alert("Please select both date and time")
                                             return
                                         }
-                                        // Handle scheduling logic here
-                                        const [hours, minutes] = meetingTime.split(':').map(Number)
-                                        const meetingDate = new Date(scheduleDate)
-                                        meetingDate.setHours(hours, minutes)
-                                        console.log("Scheduled for:", meetingDate)
+                                        console.log("Meeting scheduled:", { scheduleDate, meetingTime, meetingTopic })
                                     }}
                                 >
                                     Schedule Meeting
