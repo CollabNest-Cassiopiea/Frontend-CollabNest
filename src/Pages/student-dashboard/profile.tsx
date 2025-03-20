@@ -7,7 +7,6 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Edit, School } from "lucide-react";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { useAuthStore } from "@/store/authStore";
 
 // Define the profile data type based on the schema
