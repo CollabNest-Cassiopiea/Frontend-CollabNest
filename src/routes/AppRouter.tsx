@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import MentorPlatform from "../pages/Landing";
 import SignUp from "../pages/login";
+import RoleSelectionPage from "../pages/role";
 /*student*/
 import StudentDashboard from "@/pages/student-dashboard/home";
 import CertificatesPage from "@/pages/student-dashboard/certificates";
@@ -42,6 +43,7 @@ const AppRouter: React.FC = () => {
                         <SignUp />
                     </RedirectAuthenticatedUser>
                 } />
+                <Route path="/role" element={<RoleSelectionPage />} />
                 <Route path="/logout" element={<Logoutpage /> } />
                 <Route path="/student" element={
                     <ProtectedRoutes student mentor admin>

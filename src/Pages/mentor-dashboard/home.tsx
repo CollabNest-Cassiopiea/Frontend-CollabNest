@@ -35,7 +35,19 @@ const scheduledMeetings = [
 ];
 
 export default function MentorDashboardPage() {
-  const [ongoingProjects, setOngoingProjects] = useState([]);
+  interface Project {
+    id: string;
+    title: string;
+    description: string;
+    techStack: string[];
+    duration: string;
+    progress: number;
+    studentsEnrolled: number;
+    maxStudents: number;
+    status: "in-progress" | "open" | "completed";
+  }
+  
+  const [ongoingProjects, setOngoingProjects] = useState<Project[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [mentorId, setMentorId] = useState<string | null>(null);
@@ -80,6 +92,7 @@ export default function MentorDashboardPage() {
         const ongoing = data.projects
           .filter((project: { status: string }) => project.status === "IN_PROGRESS")
           .map((project: {
+            status: "in-progress" | "open" | "completed";
             project_id: any;
             title: any;
             description: any;
@@ -97,7 +110,7 @@ export default function MentorDashboardPage() {
             progress: project.progress || 0,
             studentsEnrolled: project.students_enrolled || 0,
             maxStudents: project.max_students || 0,
-            status: "in-progress",
+            status: project.status === "in-progress" ? "in-progress" : project.status === "open" ? "open" : "completed",
           }));
   
         setOngoingProjects(ongoing);

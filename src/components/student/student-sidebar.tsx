@@ -92,15 +92,10 @@ export function StudentSidebar({ onClose }: StudentSidebarProps) {
       
       <div className="mt-auto border-t p-4">
         <div className="flex items-center gap-2 pb-4">
-          <Avatar className="h-8 w-8 md:h-9 md:w-9">
-            <AvatarImage src="/placeholder.svg?height=36&width=36" alt="Avatar" />
-            <AvatarFallback>JD</AvatarFallback>
-          </Avatar>
           <div className="grid gap-0.5 text-sm">
-            <div className="font-medium text-xs md:text-sm">John Doe</div>
-            <div className="text-xs text-muted-foreground hidden md:block">Computer Science, Year 3</div>
+            <div className="font-medium text-xs md:text-sm">Diptanshu</div>
+            <div className="text-xs text-muted-foreground hidden md:block">MM, Year 2023</div>
           </div>
-          <ModeToggle className="ml-auto" />
         </div>
         <Button variant="outline" className="w-full justify-start gap-2 text-xs md:text-sm">
           <LogOut className="h-4 w-4" />
