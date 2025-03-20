@@ -30,7 +30,7 @@ export function MentorSidebar({ onClose }: MentorSidebarProps) {
       active: pathname === "/mentor/projects",
     },
     {
-      label: "Mentor Approvals",
+      label: "Approvals",
       icon: CheckSquare,
       href: "/mentor/approvals",
       active: pathname === "/mentor/approvals",

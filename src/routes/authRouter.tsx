@@ -8,8 +8,8 @@ export const RedirectAuthenticatedUser = ({ children, href}: {children: ReactNod
     
     useEffect(() => {
         if (isAuthenticated) {
-            if (!href && user && user.role === "STUDENT") navigate("/student");
-            else if (!href && user && user.role === "MENTOR") navigate("/mentor");
+            if (!href && user && user.role === "STUDENT") navigate("/role");
+            else if (!href && user && user.role === "MENTOR") navigate("/role");
             else if (!href) navigate("/");
             else navigate(href);
         }

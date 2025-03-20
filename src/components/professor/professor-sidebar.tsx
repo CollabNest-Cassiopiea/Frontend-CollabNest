@@ -30,7 +30,7 @@ export function ProfessorSidebar({ onClose }: ProfessorSidebarProps) {
       active: pathname === "/professor/projects",
     },
     {
-      label: "Mentor Approvals",
+      label: "Approvals",
       icon: CheckSquare,
       href: "/professor/approvals",
       active: pathname === "/professor/approvals",

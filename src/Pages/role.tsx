@@ -1,10 +1,17 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const RoleSelectionPage = () => {
   const [selectedRole, setSelectedRole] = useState('student');
+  const navigate = useNavigate();
 
-  const handleRoleChange = (role:any) => {
+  const handleRoleChange = (role: string) => {
     setSelectedRole(role);
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    navigate(`/${selectedRole}`);
   };
 
   return (
@@ -33,7 +40,6 @@ const RoleSelectionPage = () => {
       <div className="w-full max-w-md mx-auto lg:ml-auto lg:mr-12 mt-4 relative z-10">
         <div className="absolute inset-0 bg-green-400/10 blur-2xl rounded-lg animate-pulse"></div>
         <div className="relative bg-stone-950/95 backdrop-blur-sm p-6 sm:p-8 md:p-10 rounded-lg shadow-xl border border-gray-700/30">
-          {/* All existing content remains unchanged below this line */}
           <h2 className="text-xl sm:text-2xl font-semibold mb-4 sm:mb-6 text-center">
             Select Your Role
           </h2>
@@ -73,39 +79,32 @@ const RoleSelectionPage = () => {
           </div>
 
           {/* Dynamic form based on selected role */}
-          <form className="space-y-6 sm:space-y-8">
+          <form className="space-y-6 sm:space-y-8" onSubmit={handleSubmit}>
             {/* Student Form */}
             {selectedRole === 'student' && (
               <>
-                <div className="border-b border-gray-700 pb-1">
-                  <input
-                    type="text"
-                    className="w-full bg-transparent placeholder-gray-500 focus:outline-none p-2 text-sm"
-                    placeholder="Skills (e.g. JavaScript, React)"
-                  />
-                </div>
-                <div className="border-b border-gray-700 pb-1">
-                  <input
-                    type="text"
-                    className="w-full bg-transparent placeholder-gray-500 focus:outline-none p-2 text-sm"
-                    placeholder="Projects Completed"
-                  />
-                </div>
-                <div className="border-b border-gray-700 pb-1">
-                  <input
-                    type="tel"
-                    className="w-full bg-transparent placeholder-gray-500 focus:outline-none p-2 text-sm"
-                    placeholder="Phone Number (+91 123 456 7890)"
-                  />
-                </div>
-                <div className="border-b border-gray-700 pb-1">
-                  <input
-                    type="text"
-                    className="w-full bg-transparent placeholder-gray-500 focus:outline-none p-2 text-sm"
-                    placeholder="Education Background"
-                  />
-                </div>
-              </>
+              <div className="border-b border-gray-700 pb-1">
+                <input
+                  type="text"
+                  className="w-full bg-transparent placeholder-gray-500 focus:outline-none p-2 text-sm"
+                  placeholder="Skills"
+                />
+              </div>
+              <div className="border-b border-gray-700 pb-1">
+                <input
+                  type="text"
+                  className="w-full bg-transparent placeholder-gray-500 focus:outline-none p-2 text-sm"
+                  placeholder="Experience"
+                />
+              </div>
+              <div className="border-b border-gray-700 pb-1">
+                <input
+                  type="text"
+                  className="w-full bg-transparent placeholder-gray-500 focus:outline-none p-2 text-sm"
+                  placeholder="Description"
+                />
+              </div>
+            </>
             )}
 
             {/* Mentor Form */}
@@ -115,30 +114,23 @@ const RoleSelectionPage = () => {
                   <input
                     type="text"
                     className="w-full bg-transparent placeholder-gray-500 focus:outline-none p-2 text-sm"
-                    placeholder="Technical Expertise"
+                    placeholder="Skills"
                   />
                 </div>
                 <div className="border-b border-gray-700 pb-1">
                   <input
                     type="text"
                     className="w-full bg-transparent placeholder-gray-500 focus:outline-none p-2 text-sm"
-                    placeholder="Mentoring Experience"
+                    placeholder="Experience"
                   />
                 </div>
                 <div className="border-b border-gray-700 pb-1">
-                  <input
-                    type="text"
-                    className="w-full bg-transparent placeholder-gray-500 focus:outline-none p-2 text-sm"
-                    placeholder="Contact Information"
-                  />
-                </div>
-                <div className="border-b border-gray-700 pb-1">
-                  <input
-                    type="text"
-                    className="w-full bg-transparent placeholder-gray-500 focus:outline-none p-2 text-sm"
-                    placeholder="Industry Experience"
-                  />
-                </div>
+                <input
+                  type="text"
+                  className="w-full bg-transparent placeholder-gray-500 focus:outline-none p-2 text-sm"
+                  placeholder="Description"
+                />
+              </div>
               </>
             )}
 
@@ -149,30 +141,30 @@ const RoleSelectionPage = () => {
                   <input
                     type="text"
                     className="w-full bg-transparent placeholder-gray-500 focus:outline-none p-2 text-sm"
-                    placeholder="Academic Qualifications"
+                    placeholder="Department"
                   />
                 </div>
                 <div className="border-b border-gray-700 pb-1">
                   <input
                     type="text"
                     className="w-full bg-transparent placeholder-gray-500 focus:outline-none p-2 text-sm"
-                    placeholder="Research Specialization"
+                    placeholder="Research Fields"
                   />
                 </div>
                 <div className="border-b border-gray-700 pb-1">
                   <input
                     type="text"
                     className="w-full bg-transparent placeholder-gray-500 focus:outline-none p-2 text-sm"
-                    placeholder="University Affiliation"
+                    placeholder="Paper Published"
                   />
                 </div>
                 <div className="border-b border-gray-700 pb-1">
-                  <input
-                    type="text"
-                    className="w-full bg-transparent placeholder-gray-500 focus:outline-none p-2 text-sm"
-                    placeholder="Teaching Experience"
-                  />
-                </div>
+                <input
+                  type="text"
+                  className="w-full bg-transparent placeholder-gray-500 focus:outline-none p-2 text-sm"
+                  placeholder="Description"
+                />
+              </div>
               </>
             )}
 
