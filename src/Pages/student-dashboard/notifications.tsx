@@ -1,3 +1,4 @@
+
 import { DashboardLayout } from "../../components/student/dashboard-layout"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "../../components/ui/card"
@@ -76,7 +77,11 @@ export default function StudentNotifications() {
   const markAllAsRead = async () => {
     try {
       setLoading(true);
-      await axios.put(`/api/notifications/${user.user_id}/read-all`);
+      if (user) {
+        await axios.put(`/api/notifications/${user.user_id}/read-all`);
+      } else {
+        throw new Error("User not authenticated");
+      }
       
       // Update local state instead of refetching
       setNotifications((prev) =>
@@ -144,7 +149,6 @@ export default function StudentNotifications() {
           </div>
           <div className="flex gap-2">
             <Button variant="outline" onClick={markAllAsRead} disabled={loading} > {loading ? "Updating..." : "Mark All as Read"} </Button>
-            <Button variant="outline">Settings</Button>
           </div>
         </div>
 
@@ -222,4 +226,3 @@ export default function StudentNotifications() {
     </DashboardLayout>
   )
 }
-
