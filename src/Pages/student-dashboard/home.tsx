@@ -190,6 +190,7 @@ export default function StudentDashboard() {
 
         // Update state with recommendations
         setRecommendedProjects(data.recommendations);
+        console.log("RecommendedProjects: ", recommendedProjects);
       } catch (err) {
         console.error("Error fetching project suggestions:", err);
       }
@@ -341,7 +342,7 @@ export default function StudentDashboard() {
                       description={project.description}
                       mentor={project.mentor}
                       progress={project.progress}
-                      tags={project.tags}
+                      tags={project.techStack}
                       projectId={project.id}
                     />
                   ))}
@@ -393,7 +394,7 @@ export default function StudentDashboard() {
                     description={project.description}
                     mentor={project.mentor}
                     progress={project.progress}
-                    tags={project.tags}
+                    tags={project.tech_stack}
                     onClick={() => handleProjectClick(project)}
                   />
                 ))}
