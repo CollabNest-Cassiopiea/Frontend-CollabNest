@@ -16,6 +16,8 @@
 5. [Dependencies](#dependencies)
 6. [Installation Steps](#installation-steps)
 7. [Demo Video](#demo-video)
+8. [Project Resources](#project-resources)
+9. [Contributors](#contributors)
 
 ---
 
@@ -204,6 +206,36 @@ A demo video is included in the submission ZIP file. The video covers:
 - Walkthrough of the platform
 - Demonstration of unique aspects
 - Code walkthrough
+
+---
+
+## Project Resources
+
+### 🖼️ Presentation (PPT)  
+[Click here to view on Canva](https://www.canva.com/design/DAGiVt5fcJo/AwnTtTtJXpPN_C4NsHhdCg/edit)
+
+### 🎥 Demo Video  
+[Watch the demo on Google Drive](https://drive.google.com/drive/folders/1mmjAOX9KIj4wSo78uK3830hyoe9mQGfb)
+
+### 📄 Working Document  
+[Open the Google Doc](https://docs.google.com/document/d/1Ifd3K83SOINvf_plkTn-6EWmhSaW4iNigpPB25zTwYA/edit?tab=t.4oehcf9s3avf)
+
+---
+
+## Contributors
+
+### 🧠 Team Leads  
+- [@AAnimeshTripathy](https://github.com/AAnimeshTripathy)  
+- [@Look-man](https://github.com/Look-man)
+
+### 💻 Team Members  
+- [@Diptanshu-215](https://github.com/Diptanshu-215)  
+- [@A-ryanVAT-S](https://github.com/A-ryanVAT-S)  
+- [@Shreesh-125](https://github.com/Shreesh-125)  
+- [@abhin07av](https://github.com/abhin07av)  
+- [@Anish-ai](https://github.com/Anish-ai)  
+- [@thefcraft](https://github.com/thefcraft)  
+- [@Enum2](https://github.com/Enum2)
 
 ---
 
